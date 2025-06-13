@@ -1,4 +1,4 @@
-package fr.stormer3428.shivcore.commands;
+package net.shyvv.shivCore.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

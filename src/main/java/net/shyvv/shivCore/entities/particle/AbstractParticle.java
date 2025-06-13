@@ -1,13 +1,11 @@
-package fr.stormer3428.shivcore.entities.particle;
+package net.shyvv.shivCore.entities.particle;
 
-import fr.stormer3428.shivcore.entities.AbstractTickingEntity;
-import fr.stormer3428.shivcore.util.MiscUtil;
+import net.shyvv.shivCore.entities.AbstractTickingEntity;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public abstract class AbstractParticle extends AbstractTickingEntity {
     ParticleController particleController;

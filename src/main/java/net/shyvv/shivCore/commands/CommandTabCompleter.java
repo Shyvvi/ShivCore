@@ -1,11 +1,10 @@
-package fr.stormer3428.shivcore.commands;
+package net.shyvv.shivCore.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.util.StringUtil;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

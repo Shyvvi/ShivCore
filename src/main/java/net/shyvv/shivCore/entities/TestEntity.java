@@ -1,9 +1,8 @@
-package fr.stormer3428.shivcore.entities;
+package net.shyvv.shivCore.entities;
 
-import fr.stormer3428.shivcore.constants.Entities;
-import fr.stormer3428.shivcore.entities.behavior.Behavior;
-import fr.stormer3428.shivcore.entities.behavior.BehaviorController;
-import fr.stormer3428.shivcore.util.MiscUtil;
+import net.shyvv.shivCore.entities.behavior.Behavior;
+import net.shyvv.shivCore.entities.behavior.BehaviorController;
+import net.shyvv.shivCore.util.MiscUtil;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.Entity;
@@ -44,11 +43,6 @@ public class TestEntity extends AbstractTickingEntity{
         }
 
         @Override
-        public AbstractTickingEntity entityClass() {
-            return Entities.TEST_ENTITY.get;
-        }
-
-        @Override
         public boolean ignoresBreaks() {
             return false;
         }
@@ -69,11 +63,6 @@ public class TestEntity extends AbstractTickingEntity{
         }
 
         @Override
-        public AbstractTickingEntity entityClass() {
-            return Entities.TEST_ENTITY.get;
-        }
-
-        @Override
         public boolean ignoresBreaks() {
             return false;
         }
@@ -90,11 +79,6 @@ public class TestEntity extends AbstractTickingEntity{
         @Override
         public String behaviorID() {
             return "breezeBehavior";
-        }
-
-        @Override
-        public AbstractTickingEntity entityClass() {
-            return Entities.TEST_ENTITY.get;
         }
 
         @Override

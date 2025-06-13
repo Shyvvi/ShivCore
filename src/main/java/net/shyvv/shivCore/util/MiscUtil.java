@@ -1,4 +1,4 @@
-package fr.stormer3428.shivcore.util;
+package net.shyvv.shivCore.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

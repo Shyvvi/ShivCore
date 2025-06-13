@@ -1,6 +1,6 @@
-package fr.stormer3428.shivcore.entities;
+package net.shyvv.shivCore.entities;
 
-import fr.stormer3428.shivcore.util.MiscUtil;
+import net.shyvv.shivCore.util.MiscUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;

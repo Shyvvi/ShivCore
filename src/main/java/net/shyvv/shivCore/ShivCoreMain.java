@@ -1,31 +1,30 @@
-package fr.stormer3428.shivcore;
+package net.shyvv.shivCore;
 
-import fr.stormer3428.bliss.Main;
-import fr.stormer3428.shivcore.commands.CommandTabCompleter;
-import fr.stormer3428.shivcore.constants.Entities;
-import fr.stormer3428.shivcore.util.EntityUtil;
+import net.shyvv.shivCore.commands.CommandTabCompleter;
+import net.shyvv.shivCore.util.EntityUtil;
 import org.bukkit.command.CommandExecutor;
-import org.bukkit.plugin.PluginLogger;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class ShivCoreMain {
-    /// ONLY THING FORKING FROM THE BLISS PLUGIN
-    public static JavaPlugin getInstance() {
-        return JavaPlugin.getPlugin(Main.class);
-    }
-
-    /// THE OTHER ONLY THING FORKED FROM THE BLISS PLUGIN
-    public static void onEnable() {
+public final class ShivCoreMain extends JavaPlugin {
+    @Override
+    public void onEnable() {
         EntityUtil.initialize();
     }
 
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+    }
+
+    public static ShivCoreMain getInstance() {return JavaPlugin.getPlugin(ShivCoreMain.class);}
+
     private void registerCommand(String cmd, CommandExecutor cmdClass) {
         try {
-            getInstance().getCommand(cmd).setExecutor(cmdClass);
+            this.getCommand(cmd).setExecutor(cmdClass);
         } catch(Exception ignored) {}
     }
 
     public void setCommandAutofill(String cmd, String[] autofill) {
-        getInstance().getCommand(cmd).setTabCompleter(new CommandTabCompleter(autofill));
+        this.getCommand(cmd).setTabCompleter(new CommandTabCompleter(autofill));
     }
 }

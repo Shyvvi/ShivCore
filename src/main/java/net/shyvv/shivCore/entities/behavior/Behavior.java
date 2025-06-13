@@ -1,7 +1,6 @@
-package fr.stormer3428.shivcore.entities.behavior;
+package net.shyvv.shivCore.entities.behavior;
 
-import fr.stormer3428.shivcore.ShivCoreMain;
-import fr.stormer3428.shivcore.entities.AbstractTickingEntity;
+import net.shyvv.shivCore.ShivCoreMain;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,7 +10,6 @@ public abstract class Behavior {
 
     public abstract void tick(Entity e);
     public abstract String behaviorID();
-    public abstract AbstractTickingEntity entityClass();
     /// ignoresBreaks controls whether this behavior shouldn't break the for loop when iterating through behaviors
     public abstract boolean ignoresBreaks();
 

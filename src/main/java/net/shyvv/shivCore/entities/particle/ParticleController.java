@@ -1,7 +1,6 @@
-package fr.stormer3428.shivcore.entities.particle;
+package net.shyvv.shivCore.entities.particle;
 
-import fr.stormer3428.shivcore.ShivCoreMain;
-import fr.stormer3428.shivcore.util.MiscUtil;
+import net.shyvv.shivCore.ShivCoreMain;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;

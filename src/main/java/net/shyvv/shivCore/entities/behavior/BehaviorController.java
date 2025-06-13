@@ -1,4 +1,4 @@
-package fr.stormer3428.shivcore.entities.behavior;
+package net.shyvv.shivCore.entities.behavior;
 
 import org.bukkit.entity.Entity;
 
@@ -57,7 +57,7 @@ public class BehaviorController {
         private final List<Behavior> behaviors = new ArrayList<>();
         private Behavior defaultBehavior;
 
-        public Builder addBehavior(Behavior behavior) {
+        public <T extends Behavior> Builder addBehavior(T behavior) {
             behaviors.add(behavior);
             return this;
         }

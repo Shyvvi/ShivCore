@@ -1,13 +1,15 @@
 plugins {
     id 'java'
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    id 'maven-publish'
 }
 
 group = 'net.shyvv'
-version = '1.0'
+version = '0.1'
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         name = "papermc-repo"
         url = "https://repo.papermc.io/repository/maven-public/"
@@ -55,5 +57,19 @@ processResources {
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
         expand props
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = group
+            artifactId = "ShivCore"
+            version = version
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
     }
 }

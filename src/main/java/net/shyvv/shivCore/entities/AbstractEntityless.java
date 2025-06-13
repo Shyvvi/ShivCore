@@ -1,6 +1,6 @@
-package fr.stormer3428.shivcore.entities;
+package net.shyvv.shivCore.entities;
 
-import fr.stormer3428.shivcore.ShivCoreMain;
+import net.shyvv.shivCore.ShivCoreMain;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 

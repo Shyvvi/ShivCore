@@ -1,6 +1,6 @@
-package fr.stormer3428.shivcore.entities;
+package net.shyvv.shivCore.entities;
 
-import fr.stormer3428.shivcore.entities.behavior.BehaviorController;
+import net.shyvv.shivCore.entities.behavior.BehaviorController;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 

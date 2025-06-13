@@ -1,10 +1,5 @@
-package fr.stormer3428.shivcore.entities.particle;
+package net.shyvv.shivCore.entities.particle;
 
-import fr.stormer3428.shivcore.ShivCoreMain;
-import fr.stormer3428.shivcore.entities.AbstractTickingEntity;
-import org.bukkit.entity.Entity;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 public class ParticleFrame {

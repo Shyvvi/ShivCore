@@ -1,9 +1,9 @@
-package fr.stormer3428.shivcore.entities;
+package net.shyvv.shivCore.entities;
 
-import fr.stormer3428.shivcore.ShivCoreMain;
-import fr.stormer3428.shivcore.entities.behavior.BehaviorController;
-import fr.stormer3428.shivcore.util.EntityUtil;
-import fr.stormer3428.shivcore.util.MiscUtil;
+import net.shyvv.shivCore.ShivCoreMain;
+import net.shyvv.shivCore.entities.behavior.BehaviorController;
+import net.shyvv.shivCore.util.EntityUtil;
+import net.shyvv.shivCore.util.MiscUtil;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;

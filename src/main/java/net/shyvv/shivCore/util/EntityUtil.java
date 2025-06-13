@@ -1,8 +1,7 @@
-package fr.stormer3428.shivcore.util;
+package net.shyvv.shivCore.util;
 
-import fr.stormer3428.shivcore.ShivCoreMain;
-import fr.stormer3428.shivcore.constants.Entities;
-import fr.stormer3428.shivcore.entities.AbstractTickingEntity;
+import net.shyvv.shivCore.ShivCoreMain;
+import net.shyvv.shivCore.entities.AbstractTickingEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -12,7 +11,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class EntityUtil {
@@ -26,8 +24,8 @@ public class EntityUtil {
             @Override
             public void run() {
                 try {
-                    for (Entities entity : Entities.values()) {
-                        entity.get.init();
+                    for (AbstractTickingEntity entity : TICKING_ENTITIES) {
+                        entity.init();
                     }
                     this.cancel();
                     initEntitySearcher();

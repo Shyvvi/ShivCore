@@ -1,5 +1,5 @@
 name: ShivCore
-version: '1.0'
-main: net.shyvv.shivCore.ShivCore
+version: '0.1'
+main: net.shyvv.shivCore.ShivCoreMain
 api-version: '1.21'
 authors: [ Shyvv ]
