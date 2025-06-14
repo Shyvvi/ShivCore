@@ -173,6 +173,12 @@ public abstract class AbstractTickingEntity {
         return entity;
     }
 
+    public Entity spawn(Location loc, Entity owner) {
+        Entity e = spawn(loc);
+        setOwner(e, owner);
+        return e;
+    }
+
 
     public void move(Entity entity, double distance) {
         entity.teleport(MiscUtil.getRelativeLocation(entity.getLocation(), distance, 0, 0));
