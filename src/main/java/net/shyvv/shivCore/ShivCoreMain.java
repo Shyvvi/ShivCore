@@ -27,4 +27,5 @@ public final class ShivCoreMain extends JavaPlugin {
     public void setCommandAutofill(String cmd, String[] autofill) {
         this.getCommand(cmd).setTabCompleter(new CommandTabCompleter(autofill));
     }
+    public static void initialize(){}
 }
