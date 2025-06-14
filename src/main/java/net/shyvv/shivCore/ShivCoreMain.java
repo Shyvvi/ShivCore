@@ -16,7 +16,7 @@ public final class ShivCoreMain extends JavaPlugin {
         // Plugin shutdown logic
     }
 
-    public static ShivCoreMain getInstance() {return JavaPlugin.getPlugin(ShivCoreMain.class);}
+    public static JavaPlugin getInstance() {return JavaPlugin.getPlugin(ShivCoreMain.class);}
 
     private void registerCommand(String cmd, CommandExecutor cmdClass) {
         try {
@@ -27,5 +27,4 @@ public final class ShivCoreMain extends JavaPlugin {
     public void setCommandAutofill(String cmd, String[] autofill) {
         this.getCommand(cmd).setTabCompleter(new CommandTabCompleter(autofill));
     }
-    public static void initialize(){}
 }
