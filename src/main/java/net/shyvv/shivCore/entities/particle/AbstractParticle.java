@@ -1,6 +1,7 @@
 package net.shyvv.shivCore.entities.particle;
 
 import net.shyvv.shivCore.entities.AbstractTickingEntity;
+import net.shyvv.shivCore.util.MiscUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;

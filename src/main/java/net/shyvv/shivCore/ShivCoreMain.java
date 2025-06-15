@@ -6,17 +6,20 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class ShivCoreMain extends JavaPlugin {
-    @Override
-    public void onEnable() {
+    private static JavaPlugin providingPlugin = null;
+
+    public static void initialize(JavaPlugin plugin) {
+        providingPlugin = plugin;
         EntityUtil.initialize();
     }
 
     @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
+    public void onEnable() {}
 
-    public static JavaPlugin getInstance() {return JavaPlugin.getPlugin(ShivCoreMain.class);}
+    @Override
+    public void onDisable() {}
+
+    public static JavaPlugin getInstance() {return JavaPlugin.getPlugin(providingPlugin.getClass());}
 
     private void registerCommand(String cmd, CommandExecutor cmdClass) {
         try {

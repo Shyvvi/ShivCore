@@ -2,8 +2,10 @@ package net.shyvv.shivCore.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.joml.Vector2d;
 
 import java.util.Random;
 
@@ -20,6 +22,38 @@ public class MiscUtil {
 
     public static float getPythagoreas(Vector loc1) {
         return (float) Math.sqrt(Math.pow(Math.abs(loc1.getX()), 2) + Math.pow(Math.abs(loc1.getY()), 2) + Math.pow(Math.abs(loc1.getZ()), 2));
+    }
+
+    public static Vector2d get2DAngleBetweenVectors(Vector pos1, Vector pos2) {
+        double dx = pos2.getX() - pos1.getX();
+        double dy = pos2.getY() - pos1.getY();
+        double dz = pos2.getZ() - pos1.getZ();
+
+        double length = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        if (length == 0) return new Vector2d(0, 0);
+
+        double nx = dx / length;
+        double ny = dy / length;
+        double nz = dz / length;
+
+        double yaw = Math.toDegrees(Math.atan2(nx, nz));
+        double pitch = Math.toDegrees(Math.atan2(ny, Math.sqrt(nx * nx + nz * nz)));
+
+        return new Vector2d(yaw, pitch).mul(-1, -1);
+    }
+
+    public static Location raycastBlockLocation(Location startLocation, int steps, double stepDistance) {
+        Location loc = startLocation.clone();
+        for(int i = 0; i<=steps; i++) {
+            loc = getRelativeLocation(loc, stepDistance, 0, 0);
+            if(i==steps) {
+                return loc;
+            }
+            if(!loc.getBlock().isPassable()) {
+                return loc;
+            }
+        }
+        return loc;
     }
 
     public static Vector getDirectionBetweenVectors(Location loc1, Location loc2) {

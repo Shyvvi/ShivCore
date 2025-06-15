@@ -62,7 +62,6 @@ public class ParticleController {
 
             //Changing the texture of the Item Display and the size
             ItemStack is = ie.getItemStack();
-            assert is != null;
             ItemMeta im = is.getItemMeta();
             for(int i = 0; i < s; i++) {
                 if(af == i) {
@@ -72,7 +71,6 @@ public class ParticleController {
                     float sizeZ;
 
                     // cmd stuffs!
-                    assert im != null;
                     im.setCustomModelData(frame.getCustomModelData());
                     is.setItemMeta(im);
                     ie.setItemStack(is);

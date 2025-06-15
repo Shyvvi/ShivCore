@@ -31,7 +31,7 @@ public class EntityUtil {
                     initEntitySearcher();
                 } catch (Exception ignored) {}
             }
-        }.runTaskTimer(ShivCoreMain.getInstance(), 0, 20);
+        }.runTaskTimer(ShivCoreMain.getInstance(), 10, 20);
     }
 
     private static AbstractTickingEntity getTickingEntityClass(Entity e) {
