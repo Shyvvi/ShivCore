@@ -1,12 +1,12 @@
 package net.shyvv.shivCore.entities.behavior;
 
-import net.shyvv.shivCore.ShivCoreMain;
+import net.shyvv.shivCore.ShivCore;
 import org.bukkit.entity.Entity;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public abstract class Behavior {
-    private final JavaPlugin plugin = ShivCoreMain.getInstance();
+    private final JavaPlugin plugin = ShivCore.getInstance();
 
     public abstract void tick(Entity e);
     public abstract String behaviorID();

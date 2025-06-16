@@ -1,6 +1,6 @@
 package net.shyvv.shivCore.entities.particle;
 
-import net.shyvv.shivCore.ShivCoreMain;
+import net.shyvv.shivCore.ShivCore;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;
@@ -143,14 +143,14 @@ public class ParticleController {
     }
 
     public void setSizeModifier(Entity entity, float value) {
-        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCoreMain.getInstance(), "sizeModifier"), PersistentDataType.FLOAT, value);
+        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCore.getInstance(), "sizeModifier"), PersistentDataType.FLOAT, value);
     }
 
 
     @SuppressWarnings("DataFlowIssue")
     private float getSizeModifier(Entity entity) {
-        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCoreMain.getInstance(), "sizeModifier"))) {
-            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCoreMain.getInstance(), "sizeModifier"), PersistentDataType.FLOAT);
+        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCore.getInstance(), "sizeModifier"))) {
+            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), "sizeModifier"), PersistentDataType.FLOAT);
         }
         return 0;
     }
@@ -162,12 +162,12 @@ public class ParticleController {
         return i;
     }
     private void setInt(Entity entity, int value, String id) {
-        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCoreMain.getInstance(), id), PersistentDataType.INTEGER, value);
+        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.INTEGER, value);
     }
     @SuppressWarnings("DataFlowIssue")
     private int getInt(Entity entity, String id) {
-        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCoreMain.getInstance(), id))) {
-            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCoreMain.getInstance(), id), PersistentDataType.INTEGER);
+        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCore.getInstance(), id))) {
+            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.INTEGER);
         }
         return 0;
     }

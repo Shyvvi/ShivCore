@@ -1,5 +1,9 @@
 name: ShivCore
 version: '0.1'
-main: net.shyvv.shivCore.ShivCoreMain
+main: net.shyvv.shivCore.ShivCore
 api-version: '1.21'
 authors: [ Shyvv ]
+
+commands:
+  scsummon:
+    description: "Summons a ShivCore entity"

@@ -1,6 +1,6 @@
 package net.shyvv.shivCore.entities;
 
-import net.shyvv.shivCore.ShivCoreMain;
+import net.shyvv.shivCore.ShivCore;
 import net.shyvv.shivCore.entities.behavior.BehaviorController;
 import net.shyvv.shivCore.util.EntityUtil;
 import net.shyvv.shivCore.util.MiscUtil;
@@ -23,7 +23,7 @@ public abstract class AbstractTickingEntity {
     final String entityID;
     BehaviorController behaviorController = null;
 
-    private final NamespacedKey ownerKey = new NamespacedKey(ShivCoreMain.getInstance(), "OWNER");
+    private final NamespacedKey ownerKey = new NamespacedKey(ShivCore.getInstance(), "OWNER");
 
     public AbstractTickingEntity(EntityType baseEntity, String entityID, BehaviorController behaviorController) {
         this.entityID = entityID;
@@ -46,7 +46,7 @@ public abstract class AbstractTickingEntity {
     }
 
     public NamespacedKey getEntityID() {
-        return new NamespacedKey(ShivCoreMain.getInstance(), this.entityID);
+        return new NamespacedKey(ShivCore.getInstance(), this.entityID);
     }
 
     public BehaviorController getBehaviorController() {
@@ -68,37 +68,37 @@ public abstract class AbstractTickingEntity {
     }
 
     public void setInt(Entity entity, int value, String id) {
-        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCoreMain.getInstance(), id), PersistentDataType.INTEGER, value);
+        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.INTEGER, value);
     }
 
     @SuppressWarnings("DataFlowIssue")
     public int getInt(Entity entity, String id) {
-        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCoreMain.getInstance(), id))) {
-            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCoreMain.getInstance(), id), PersistentDataType.INTEGER);
+        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCore.getInstance(), id))) {
+            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.INTEGER);
         }
         return 0;
     }
 
     public void setFloat(Entity entity, float value, String id) {
-        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCoreMain.getInstance(), id), PersistentDataType.FLOAT, value);
+        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.FLOAT, value);
     }
 
     @SuppressWarnings("DataFlowIssue")
     public float getFloat(Entity entity, String id) {
-        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCoreMain.getInstance(), id))) {
-            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCoreMain.getInstance(), id), PersistentDataType.FLOAT);
+        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCore.getInstance(), id))) {
+            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.FLOAT);
         }
         return 0;
     }
 
     public static void setBoolean(Entity entity, boolean value, String id) {
-        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCoreMain.getInstance(), id), PersistentDataType.BOOLEAN, value);
+        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.BOOLEAN, value);
     }
 
     @SuppressWarnings("DataFlowIssue")
     public static boolean getBoolean(Entity entity, String id) {
-        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCoreMain.getInstance(), id))) {
-            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCoreMain.getInstance(), id), PersistentDataType.BOOLEAN);
+        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCore.getInstance(), id))) {
+            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.BOOLEAN);
         }
         return false;
     }
