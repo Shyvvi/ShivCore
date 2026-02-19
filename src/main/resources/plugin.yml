@@ -3,3 +3,8 @@ version: '0.1'
 main: net.shyvv.shivCore.ShivCoreMain
 api-version: '1.21'
 authors: [ Shyvv ]
+
+commands:
+  openui:
+    description: ""
+    usage: "/openui [guiID]"

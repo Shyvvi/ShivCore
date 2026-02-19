@@ -1,5 +1,6 @@
 package net.shyvv.shivCore.entities;
 
+import io.papermc.paper.datacomponent.item.CustomModelData;
 import net.shyvv.shivCore.ShivCoreMain;
 import net.shyvv.shivCore.entities.behavior.BehaviorController;
 import net.shyvv.shivCore.util.EntityUtil;
@@ -13,6 +14,7 @@ import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.components.CustomModelDataComponent;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
