@@ -1,6 +1,6 @@
 package net.shyvv.shivCore.entities;
 
-import net.shyvv.shivCore.ShivCoreMain;
+import net.shyvv.shivCore.ShivCore;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -43,6 +43,6 @@ public abstract class AbstractEntityless {
                     this.cancel();
                 }
             }
-        }.runTaskTimer(ShivCoreMain.getInstance(), initDelay(), period());
+        }.runTaskTimer(ShivCore.getInstance(), initDelay(), period());
     }
 }
