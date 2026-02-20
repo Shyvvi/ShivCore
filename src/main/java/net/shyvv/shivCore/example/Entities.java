@@ -1,6 +1,5 @@
-package net.shyvv.shivCore.registry;
+package net.shyvv.shivCore.example;
 
-import net.shyvv.shivCore.entities.TestEntity;
 import net.shyvv.shivCore.entities.behavior.BehaviorController;
 import org.bukkit.entity.EntityType;
 

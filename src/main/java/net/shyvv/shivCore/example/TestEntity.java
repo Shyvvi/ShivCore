@@ -1,5 +1,6 @@
-package net.shyvv.shivCore.entities;
+package net.shyvv.shivCore.example;
 
+import net.shyvv.shivCore.entities.AbstractTickingEntity;
 import net.shyvv.shivCore.entities.behavior.Behavior;
 import net.shyvv.shivCore.entities.behavior.BehaviorController;
 import net.shyvv.shivCore.util.MiscUtil;
@@ -9,7 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-public class TestEntity extends AbstractTickingEntity{
+public class TestEntity extends AbstractTickingEntity {
     public TestEntity(EntityType baseEntity, String entityID, BehaviorController behaviorController) {
         super(baseEntity, entityID, behaviorController);
     }

@@ -1,7 +1,7 @@
-package net.shyvv.shivCore.util;
+package net.shyvv.shivCore.item;
 
 import net.kyori.adventure.text.Component;
-import net.shyvv.shivCore.ShivCoreMain;
+import net.shyvv.shivCore.ShivCore;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +18,7 @@ public class ItemStackBuilder {
     }
 
     public static <P, C>  ItemMeta setItemMetaData(ItemMeta meta, String key, PersistentDataType<P, C> type, C value) {
-        meta.getPersistentDataContainer().set(new NamespacedKey(ShivCoreMain.getInstance(), key), type, value);
+        meta.getPersistentDataContainer().set(new NamespacedKey(ShivCore.getInstance(), key), type, value);
         return meta;
     }
 
@@ -28,6 +28,11 @@ public class ItemStackBuilder {
         public Builder(Material material) {
             this.baseItem = new ItemStack(material);
             this.itemMeta = baseItem.getItemMeta();
+        }
+
+        public Builder setMaxStackSize(int value) {
+            this.itemMeta.setMaxStackSize(value);
+            return this;
         }
 
         public Builder setCustomModelData(int value) {

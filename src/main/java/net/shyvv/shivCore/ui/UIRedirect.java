@@ -1,6 +1,5 @@
 package net.shyvv.shivCore.ui;
 
-import net.shyvv.shivCore.util.managers.GUIManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

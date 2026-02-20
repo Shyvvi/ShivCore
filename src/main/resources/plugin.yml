@@ -6,5 +6,8 @@ authors: [ Shyvv ]
 
 commands:
   openui:
-    description: ""
+    description: "Requires Operator"
     usage: "/openui [guiID]"
+  giveitem:
+    description: "Requires Operator"
+    usage: "/giveitem [itemID]"

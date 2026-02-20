@@ -1,7 +1,7 @@
 package net.shyvv.shivCore.ui;
 
-import net.shyvv.shivCore.ShivCoreMain;
-import net.shyvv.shivCore.util.ItemStackBuilder;
+import net.shyvv.shivCore.ShivCore;
+import net.shyvv.shivCore.item.ItemStackBuilder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -15,7 +15,7 @@ public class UIElement {
     }
 
     private ItemStack designateItemStackID(ItemStack itemStack, String itemID) {
-        return ItemStackBuilder.setItemStackData(itemStack, "itemID", PersistentDataType.STRING, itemID);
+        return ItemStackBuilder.setItemStackData(itemStack, "itemID", PersistentDataType.STRING, itemID+"_button");
     }
 
     public ItemStack getItemStack() {
@@ -23,7 +23,7 @@ public class UIElement {
     }
 
     public String getID() {
-        return itemStack.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ShivCoreMain.getInstance(), "itemID"), PersistentDataType.STRING);
+        return itemStack.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), "itemID"), PersistentDataType.STRING);
     }
 
     public int getSlot() {

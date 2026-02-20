@@ -1,6 +1,5 @@
 package net.shyvv.shivCore.ui;
 
-import net.shyvv.shivCore.util.managers.GUIManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;

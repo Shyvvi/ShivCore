@@ -1,7 +1,6 @@
 package net.shyvv.shivCore.config;
 
-import net.shyvv.shivCore.ShivCoreMain;
-import net.shyvv.shivCore.util.managers.ConfigManager;
+import net.shyvv.shivCore.ShivCore;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,13 +26,13 @@ public class ConfigFile {
     public void initialize() {
         configFile = new File(plugin.getDataFolder(), name+".yml");
         if (!this.getConfigFile().exists()) {
-            ShivCoreMain.log.info("Creating config {} as it was not found", name);
+            ShivCore.log.info("Creating config {} as it was not found", name);
         }
         config = YamlConfiguration.loadConfiguration(this.getConfigFile());
         saveConfig();
 
         for(DefaultConfig dc : defaultConfigList) {
-            ShivCoreMain.log.info("Creating defaultConfig - {}", dc.key);
+            ShivCore.log.info("Creating defaultConfig - {}", dc.key);
             dc.initializeDefault(this);
         }
         saveConfig();

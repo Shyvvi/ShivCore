@@ -1,7 +1,6 @@
 package net.shyvv.shivCore.ui;
 
 import net.kyori.adventure.text.Component;
-import net.shyvv.shivCore.util.managers.GUIManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;

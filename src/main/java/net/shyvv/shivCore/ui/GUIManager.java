@@ -1,7 +1,8 @@
-package net.shyvv.shivCore.util.managers;
+package net.shyvv.shivCore.ui;
 
-import net.shyvv.shivCore.ShivCoreMain;
-import net.shyvv.shivCore.ui.InvUserInterface;
+import net.shyvv.shivCore.ShivCore;
+import net.shyvv.shivCore.constants.Commands;
+import net.shyvv.shivCore.util.ServerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,8 @@ public class GUIManager {
     public static List<InvUserInterface> USER_INTERFACES = new ArrayList<>();
 
     public static void initialize() {
+        ShivCore.getInstance().getServer().getPluginManager().registerEvents(new InvUIListener(), ShivCore.getInstance());
+
         List<String> autofillList = new ArrayList<>();
         for(InvUserInterface iui : USER_INTERFACES) {
             autofillList.add(iui.getID());
@@ -18,6 +21,6 @@ public class GUIManager {
         for(int i = 0; i < autofillList.size(); i++) {
             str[i] = autofillList.get(i);
         }
-        ShivCoreMain.setCommandAutofill(ShivCoreMain.OPEN_UI_CMD, str);
+        Commands.OPEN_UI_COMMAND.setAutofill(str);
     }
 }
