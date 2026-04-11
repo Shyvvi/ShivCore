@@ -1,67 +1,129 @@
 package net.shyvv.shivCore.ui;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.shyvv.shivCore.ShivCore;
+import net.shyvv.shivCore.util.MiscUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 public class InvUserInterface {
     String ID;
-    Inventory inventory;
-    List<UIElement> uiElements;
+    int unicode;
+    int invSize;
+    TextComponent title;
+    Map<UUID, Inventory> inventories = new HashMap<>();
+    List<UIElement> baseUIElements;
     ItemStack emptyFill;
-    private InvUserInterface(String interfaceID, int invSize, String title, Builder builder) {
+    private InvUserInterface(String interfaceID, int invSize, String title, int unicode, String negativeSpacesGUI, String negativeSpacesTitle, TextColor color, Builder builder) {
         this.ID = interfaceID;
-        this.inventory = Bukkit.createInventory(null, invSize, Component.text(title));
-        this.uiElements = builder.uiElements;
+        this.invSize = invSize;
+        this.title = Component.text().append(Component.text(negativeSpacesGUI + Character.toString(unicode), NamedTextColor.WHITE)).append(Component.text(negativeSpacesTitle + title, color)).build();
+        ShivCore.log.info("Interface {} with unicode value of: {}", interfaceID, Character.toString(unicode));
+        this.baseUIElements = builder.uiElements;
         this.emptyFill = builder.emptyFill;
-
-        setContents();
+        this.unicode = unicode;
 
         GUIManager.USER_INTERFACES.add(this);
     }
 
     public void openUI(Player p) {
-        p.openInventory(inventory);
+        Inventory inv = Bukkit.createInventory(null, invSize, title);
+        inventories.put(p.getUniqueId(), inv);
+        setContents(p, inv);
+        p.openInventory(inv);
     }
 
     public void onInventoryClick(InventoryClickEvent e) {
         e.setCancelled(true);
         ItemStack clicked = e.getCurrentItem();
         HumanEntity entity = e.getWhoClicked();
-        if(clicked != null && entity instanceof Player p) {
-            for (UIElement uie : uiElements) {
-                if (clicked.equals(uie.getItemStack()) && uie instanceof UIRedirect uir) {
-                    uir.onClick(p);
+        if(clicked != null && entity instanceof Player p && e.getInventory().equals(getInvGUI(p))) {
+            for (UIElement uie : baseUIElements) {
+                if (getItemID(clicked).equals(uie.getID(p))) {
+                    if(uie instanceof UIClickable uir) {
+                        uir.onClick(p);
+                    }
                     break;
                 }
             }
         }
     }
 
-    public void onInventoryInteract(InventoryInteractEvent e) {
-
-    }
-
-    public void onInventoryClose(InventoryCloseEvent e) {
-
-    }
-
-    public void setContents() {
-        for(UIElement uie : uiElements) {
-            inventory.setItem(uie.slot, uie.getItemStack());
+    private String getItemID(ItemStack is) {
+        if(is.getItemMeta().getPersistentDataContainer().has(new NamespacedKey(ShivCore.getInstance(), "itemID"))) {
+            return is.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), "itemID"), PersistentDataType.STRING);
         }
-        for(int i = 0; i < inventory.getContents().length; i++) {
-            if(inventory.getItem(i) == null) {
-                inventory.setItem(i, emptyFill);
+        return "";
+    }
+
+    public void onInventoryInteract(InventoryInteractEvent e) {}
+    public void onInventoryOpen(InventoryOpenEvent e) {}
+    public void onInventoryClose(InventoryCloseEvent e) {}
+
+    @Deprecated
+    public void setItem(UIElement uiElement, ItemStack item, Player p) {
+        for(UIElement uie : baseUIElements) {
+            if(uie.getID(p).equals(uiElement.getID(p))) {
+                getInvGUI(p).setItem(uie.slot, item);
+                updateInventory(p);
+                break;
+            }
+        }
+    }
+
+    public void setSlot(int slot, ItemStack item, Player p) {
+        Inventory inv = getInvGUI(p);
+        if (inv != null) {
+            inv.setItem(slot, item);
+            p.updateInventory();
+        }
+    }
+
+    public void updateInventory(Player p) {
+        p.updateInventory();
+    }
+
+    public Inventory getInvGUI(Player p) {
+        return inventories.get(p.getUniqueId());
+    }
+
+    public void setContents(Player p, Inventory inv) {
+        for (UIElement uie : baseUIElements) {
+            inv.setItem(uie.getSlot(), uie.getItemStack(p));
+        }
+
+        if (emptyFill != null) {
+            for (int i = 0; i < inv.getSize(); i++) {
+                if (inv.getItem(i) == null) {
+                    inv.setItem(i, emptyFill);
+                }
+            }
+        }
+    }
+
+    public void refreshElement(Player p, String elementID) {
+        Inventory inv = getInvGUI(p);
+        if (inv != null) {
+            for (UIElement uie : baseUIElements) {
+                if (uie.getID(p).equals(elementID)) {
+                    inv.setItem(uie.slot, uie.getItemStack(p));
+                    break;
+                }
             }
         }
     }
@@ -74,9 +136,13 @@ public class InvUserInterface {
         List<UIElement> uiElements = new ArrayList<>();
         ItemStack emptyFill = null;
 
-        String interfaceID;
         int invSize;
+        int unicode = 0;
+        String interfaceID;
+        String negativeSpacesTitle = "";
+        String negativeSpacesGui = "";
         String title;
+        TextColor color = NamedTextColor.DARK_GRAY;
 
         public Builder(String interfaceID, int invSize, String title) {
             this.interfaceID = interfaceID;
@@ -99,8 +165,28 @@ public class InvUserInterface {
             return this;
         }
 
+        public Builder setGUIUnicode(int unicode) {
+            this.unicode = unicode;
+            return this;
+        }
+
+        public Builder setGUINegativeSpaces(int value) {
+            negativeSpacesGui = MiscUtil.getNegativeSpaces(value);
+            return this;
+        }
+
+        public Builder setTitleNegativeSpaces(int value) {
+            negativeSpacesTitle = MiscUtil.getNegativeSpaces(value);
+            return this;
+        }
+
+        public Builder setGUITitleColor(TextColor color) {
+            this.color = color;
+            return this;
+        }
+
         public InvUserInterface build() {
-            return new InvUserInterface(interfaceID, invSize, title, this);
+            return new InvUserInterface(interfaceID, invSize, title, unicode, negativeSpacesGui, negativeSpacesTitle, color, this);
         }
     }
 }

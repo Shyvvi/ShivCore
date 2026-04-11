@@ -2,7 +2,6 @@ package net.shyvv.shivCore.ui;
 
 import net.shyvv.shivCore.ShivCore;
 import net.shyvv.shivCore.constants.Commands;
-import net.shyvv.shivCore.util.ServerUtil;
 
 import java.util.ArrayList;
 import java.util.List;

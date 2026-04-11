@@ -2,8 +2,6 @@ package net.shyvv.shivCore.commands;
 
 import net.shyvv.shivCore.ui.InvUserInterface;
 import net.shyvv.shivCore.ui.GUIManager;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

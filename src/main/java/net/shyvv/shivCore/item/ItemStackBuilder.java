@@ -50,6 +50,11 @@ public class ItemStackBuilder {
             return this;
         }
 
+        public Builder setHiddenTooltip(boolean value) {
+            this.itemMeta.setHideTooltip(value);
+            return this;
+        }
+
         public <P, C>  Builder setData(String key, PersistentDataType<P, C> type, C value) {
             ItemStackBuilder.setItemMetaData(itemMeta, key, type, value);
             return this;

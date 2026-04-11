@@ -1,5 +1,6 @@
 package net.shyvv.shivCore.util;
 
+import net.shyvv.shivCore.ui.InvUserInterface;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -40,6 +41,14 @@ public class MiscUtil {
         double pitch = Math.toDegrees(Math.atan2(ny, Math.sqrt(nx * nx + nz * nz)));
 
         return new Vector2d(yaw, pitch).mul(-1, -1);
+    }
+
+    public static String getNegativeSpaces(int value) {
+        String ns = "";
+        for(int i = 0; i < value; i++) {
+            ns += "ꌕ";
+        }
+        return ns;
     }
 
     public static Location raycastBlockLocation(Location startLocation, int steps, double stepDistance) {

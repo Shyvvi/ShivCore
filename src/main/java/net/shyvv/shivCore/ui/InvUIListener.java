@@ -1,11 +1,10 @@
 package net.shyvv.shivCore.ui;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.inventory.*;
+import org.bukkit.inventory.Inventory;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -26,13 +25,21 @@ public class InvUIListener implements Listener {
         callEvent("onInventoryClose", e);
     }
 
+    @EventHandler
+    private void inventoryOpenEvent(InventoryOpenEvent e) {
+        callEvent("onInventoryOpen", e);
+    }
+
     private <T extends InventoryEvent> void callEvent(String methodID, T inventoryEvent) {
-        for(InvUserInterface iui : GUIManager.USER_INTERFACES) {
-            if(iui.inventory != null && iui.inventory.equals(inventoryEvent.getInventory())) {
-                try {
-                    iui.getClass().getDeclaredMethod(methodID, inventoryEvent.getClass()).invoke(iui, inventoryEvent);
-                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    throw new RuntimeException(e);
+        if ((inventoryEvent.getView().getPlayer() instanceof Player player)) {
+            for (InvUserInterface iui : GUIManager.USER_INTERFACES) {
+                Inventory playerInv = iui.getInvGUI(player);
+                if (playerInv != null && playerInv.equals(inventoryEvent.getInventory())) {
+                    try {
+                        iui.getClass().getDeclaredMethod(methodID, inventoryEvent.getClass()).invoke(iui, inventoryEvent);
+                    } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                        throw new RuntimeException("Failed to invoke UI event: " + methodID, e);
+                    }
                 }
             }
         }
