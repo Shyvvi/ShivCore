@@ -1,8 +1,10 @@
 package net.shyvv.shivCore.entities;
 
+import net.kyori.adventure.text.Component;
 import net.shyvv.shivCore.ShivCore;
 import net.shyvv.shivCore.entities.behavior.BehaviorController;
-import net.shyvv.shivCore.util.EntityUtil;
+import net.shyvv.shivCore.util.EntityManager;
+import net.shyvv.shivCore.util.EntityUtils;
 import net.shyvv.shivCore.util.MiscUtil;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -14,11 +16,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
-public abstract class AbstractTickingEntity {
+public abstract class AbstractTickingEntity implements EntityUtils {
     final EntityType baseEntity;
     final String entityID;
     BehaviorController behaviorController = null;
@@ -29,13 +33,13 @@ public abstract class AbstractTickingEntity {
         this.entityID = entityID;
         this.baseEntity = baseEntity;
         this.behaviorController = behaviorController;
-        EntityUtil.TICKING_ENTITIES.add(this);
+        EntityManager.TICKING_ENTITIES.add(this);
     }
 
     public AbstractTickingEntity(EntityType baseEntity, String entityID) {
         this.entityID = entityID;
         this.baseEntity = baseEntity;
-        EntityUtil.TICKING_ENTITIES.add(this);
+        EntityManager.TICKING_ENTITIES.add(this);
     }
 
     public abstract void tick(Entity entity);
@@ -60,49 +64,6 @@ public abstract class AbstractTickingEntity {
             behaviorController.tickBehaviors(e);
         }
     }
-
-    public int incrementInt(Entity entity, String id) {
-        int i = getInt(entity, id);
-        setInt(entity, i+1, id);
-        return i;
-    }
-
-    public void setInt(Entity entity, int value, String id) {
-        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.INTEGER, value);
-    }
-
-    @SuppressWarnings("DataFlowIssue")
-    public int getInt(Entity entity, String id) {
-        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCore.getInstance(), id))) {
-            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.INTEGER);
-        }
-        return 0;
-    }
-
-    public void setFloat(Entity entity, float value, String id) {
-        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.FLOAT, value);
-    }
-
-    @SuppressWarnings("DataFlowIssue")
-    public float getFloat(Entity entity, String id) {
-        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCore.getInstance(), id))) {
-            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.FLOAT);
-        }
-        return 0;
-    }
-
-    public static void setBoolean(Entity entity, boolean value, String id) {
-        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.BOOLEAN, value);
-    }
-
-    @SuppressWarnings("DataFlowIssue")
-    public static boolean getBoolean(Entity entity, String id) {
-        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCore.getInstance(), id))) {
-            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.BOOLEAN);
-        }
-        return false;
-    }
-
 
     public boolean isOwner(Entity entity, Entity owner) {
         if(entity.getPersistentDataContainer().has(ownerKey)) {
@@ -167,9 +128,9 @@ public abstract class AbstractTickingEntity {
         assert world != null;
         Entity entity = world.spawnEntity(loc, getBaseEntity());
         spawnArgs(entity);
-        entity.getPersistentDataContainer().set(EntityUtil.TICKING_KEY, PersistentDataType.BOOLEAN, true);
+        entity.getPersistentDataContainer().set(EntityManager.TICKING_KEY, PersistentDataType.BOOLEAN, true);
         entity.getPersistentDataContainer().set(getEntityID(), PersistentDataType.BOOLEAN, true);
-        EntityUtil.beginTickingEntity(entity);
+        EntityManager.beginTickingEntity(entity);
         return entity;
     }
 
@@ -179,13 +140,36 @@ public abstract class AbstractTickingEntity {
         return e;
     }
 
+    /**
+     * Spawns an entity with duplicate
+     * @param loc spawn location
+     * @param isDuplicate if the entity spawns with a duplicate or not
+     * @return duplicate entity
+     */
+    public Entity spawn(Location loc, boolean isDuplicate) {
+        String id = UUID.randomUUID().toString();
+        setString(spawn(loc), id, "dupeTarget");
+        Entity e = spawn(loc);
+        setString(e, id, "dupeTarget");
+        setBoolean(e, isDuplicate, "isDuplicate");
+        return e;
+    }
+
+    public boolean isDuplicate(Entity entity) {
+        return getBoolean(entity, "isDuplicate");
+    }
+
+    @ApiStatus.OverrideOnly
+    public void moveArgs(Entity entity) {}
 
     public void move(Entity entity, double distance) {
         entity.teleport(MiscUtil.getRelativeLocation(entity.getLocation(), distance, 0, 0));
+        moveArgs(entity);
     }
 
     public void move(Entity entity, Location startPos, double distance) {
         entity.teleport(MiscUtil.getRelativeLocation(startPos, distance, 0, 0));
+        moveArgs(entity);
     }
 
     public void init(){}

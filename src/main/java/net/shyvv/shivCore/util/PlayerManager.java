@@ -5,13 +5,12 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PlayerManager {
     public static List<Player> PLAYERS_ONLINE = new ArrayList<>();
 
     public static List<Player> getPlayersOnline() {
-        return ShivCore.getInstance().getServer().getOnlinePlayers().stream().collect(Collectors.toUnmodifiableList());
+        return new ArrayList<>(ShivCore.getInstance().getServer().getOnlinePlayers());
     }
 
     public static void initialize() {

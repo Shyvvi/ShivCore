@@ -14,7 +14,7 @@ public interface ProjectileFunctions {
     void collideEntity(Entity projectile, Entity victim);
 
     /// Called in the for-loop when the entity moves
-    void moveArgs(Entity e);
+    void raycastArgs(Entity e);
 
     /// Whether the projectile collides with the block is based off this boolean
     boolean collidesWithBlock(Block block);
@@ -23,9 +23,9 @@ public interface ProjectileFunctions {
     boolean entityCollisionIsExempt(Entity e);
 
     /// Distance is the distance per-step, steps is how many times the entity
-    default Location move(Entity e, double distance, int steps, double collisionSize, boolean shouldBreak) {
+    default Location raycast(Entity e, double distance, int steps, double collisionSize, boolean shouldBreak) {
         for(int z = 0; z<steps; z++) {
-            moveArgs(e);
+            raycastArgs(e);
             mv(e, distance);
 
             if(collidesWithBlock(e.getLocation().getBlock())) {
@@ -45,8 +45,8 @@ public interface ProjectileFunctions {
         return e.getLocation();
     }
 
-    default Location move(Entity e, double distance, int steps, double collisionSize) {
-        return move(e, distance, steps, collisionSize, false);
+    default Location raycast(Entity e, double distance, int steps, double collisionSize) {
+        return raycast(e, distance, steps, collisionSize, false);
     }
 
     default void mv(Entity entity, double distance) {

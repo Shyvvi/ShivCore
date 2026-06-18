@@ -1,12 +1,15 @@
 package net.shyvv.shivCore.entities.particle;
 
+import net.kyori.adventure.text.Component;
 import net.shyvv.shivCore.entities.AbstractTickingEntity;
-import net.shyvv.shivCore.util.MiscUtil;
+import net.shyvv.shivCore.util.EntityManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Transformation;
+import org.joml.Vector3f;
 
 public abstract class AbstractParticle extends AbstractTickingEntity {
     ParticleController particleController;
@@ -33,10 +36,46 @@ public abstract class AbstractParticle extends AbstractTickingEntity {
 
     public ParticleController getParticleController() {return this.particleController;}
 
+    public void setDisplaySize(Entity e, Vector3f size) {
+        ItemDisplay ie = (ItemDisplay) e;
+        Transformation defaultTransformation = ie.getTransformation();
+        ie.setTransformation(new Transformation(
+                defaultTransformation.getTranslation(),
+                defaultTransformation.getLeftRotation(),
+                size,
+                defaultTransformation.getRightRotation())
+        );
+    }
+
+    public void displaceDuplicate(Entity entity) {
+        for(Entity e : entity.getNearbyEntities(2, 2, 2)) {
+            if(getString(entity, "dupeTarget").equals(getString(e, "dupeTarget"))) {
+                entity.teleport(e.getLocation().add(0.0, -0.05, 0.0));
+                break;
+            }
+        }
+    }
+
     @Override
     public void tick(Entity entity) {
         getParticleController().tickFrames(entity);
         particleTick(entity);
+
+        if(isDuplicate(entity)) {
+            ItemDisplay ie = (ItemDisplay) entity;
+            Transformation dt = ie.getTransformation();
+            if(dt.getScale().z > 0) {
+                ie.setTransformation(new Transformation(
+                        dt.getTranslation(),
+                        dt.getLeftRotation(),
+                        new Vector3f(dt.getScale().x, dt.getScale().y, -dt.getScale().z),
+                        dt.getRightRotation())
+                );
+            }
+            if(hasMoved(entity)) {
+                displaceDuplicate(entity);
+            }
+        }
 
         int lt = incrementInt(entity, "lifeTime");
         if(lt > lifeTime) {
@@ -53,5 +92,6 @@ public abstract class AbstractParticle extends AbstractTickingEntity {
         ie.setTeleportDuration(2);
         ie.setInterpolationDuration(1);
         particleSpawnArgs(entity);
+
     }
 }

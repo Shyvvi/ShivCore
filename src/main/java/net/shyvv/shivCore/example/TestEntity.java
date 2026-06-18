@@ -47,6 +47,11 @@ public class TestEntity extends AbstractTickingEntity {
         public boolean ignoresBreaks() {
             return false;
         }
+
+        @Override
+        public AbstractTickingEntity entityClass() {
+            return null;
+        }
     }
 
     public static class BlazeBehavior extends Behavior {
@@ -67,6 +72,11 @@ public class TestEntity extends AbstractTickingEntity {
         public boolean ignoresBreaks() {
             return false;
         }
+
+        @Override
+        public AbstractTickingEntity entityClass() {
+            return null;
+        }
     }
 
     public static class BreezeBehavior extends Behavior {
@@ -85,6 +95,11 @@ public class TestEntity extends AbstractTickingEntity {
         @Override
         public boolean ignoresBreaks() {
             return false;
+        }
+
+        @Override
+        public AbstractTickingEntity entityClass() {
+            return null;
         }
     }
 }

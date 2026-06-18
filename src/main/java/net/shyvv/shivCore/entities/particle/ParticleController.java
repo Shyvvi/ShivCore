@@ -2,6 +2,7 @@ package net.shyvv.shivCore.entities.particle;
 
 import net.shyvv.shivCore.ShivCore;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemDisplay;
@@ -45,6 +46,7 @@ public class ParticleController {
         int fd = incrementInt(ie, frameTimeID);
 
         ie.setBrightness(new Display.Brightness(brightness, brightness));
+        ie.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.HEAD);
 
         if(this.facesCamera) {
             ie.setBillboard(Display.Billboard.CENTER);
