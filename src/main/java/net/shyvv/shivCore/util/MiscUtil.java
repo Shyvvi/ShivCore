@@ -11,8 +11,6 @@ import org.joml.Vector2d;
 import java.util.Random;
 
 public class MiscUtil {
-    /// This class is just yoinked from the trial plugin which I made
-
     public static boolean isBetween(int x, int lower, int upper) {
         return lower <= x && x <= upper;
     }
