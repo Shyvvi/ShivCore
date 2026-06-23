@@ -1,18 +1,17 @@
 package net.shyvv.shivCore.damage;
 
 import net.shyvv.shivCore.util.EntityUtils;
-import net.shyvv.shivCore.util.MiscUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.joml.Vector2d;
 
 public class DamageType implements EntityUtils {
     String deathMessage;
     String damageTypeID;
     int ignitionTime;
     boolean ignoresIFrames;
-    float knockback;
+    Vector2d knockback;
     private DamageType(String damageTypeID, String deathMessage, DamageType.Builder builder) {
         this.damageTypeID = damageTypeID;
         this.deathMessage = deathMessage;
@@ -49,7 +48,7 @@ public class DamageType implements EntityUtils {
     public static class Builder {
         int ignitionTime = 0;
         boolean ignoresIFrames = false;
-        float knockback = 0;
+        Vector2d knockback = new Vector2d(0,0);
         String damageTypeID;
         String deathMessage;
         public Builder(String damageTypeID, String deathMessage) {
@@ -57,7 +56,7 @@ public class DamageType implements EntityUtils {
             this.deathMessage = deathMessage;
         }
 
-        public Builder setKnockback(float knockback) {
+        public Builder setKnockback(Vector2d knockback) {
             this.knockback = knockback;
             return this;
         }
