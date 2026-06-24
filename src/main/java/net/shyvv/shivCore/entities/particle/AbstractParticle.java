@@ -1,8 +1,7 @@
 package net.shyvv.shivCore.entities.particle;
 
-import net.kyori.adventure.text.Component;
 import net.shyvv.shivCore.entities.AbstractTickingEntity;
-import net.shyvv.shivCore.util.EntityManager;
+import net.shyvv.shivCore.entities.animation.FrameAnimation;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -12,21 +11,21 @@ import org.bukkit.util.Transformation;
 import org.joml.Vector3f;
 
 public abstract class AbstractParticle extends AbstractTickingEntity {
-    ParticleController particleController;
+    FrameAnimation particleAnimation;
     Material baseItem;
     int lifeTime;
 
-    public AbstractParticle(Material baseItem, String entityID, ParticleController particleController) {
+    public AbstractParticle(Material baseItem, String entityID, FrameAnimation particleController) {
         super(EntityType.ITEM_DISPLAY, entityID);
-        this.particleController = particleController;
+        this.particleAnimation = particleController;
         this.baseItem = baseItem;
 
         this.lifeTime = particleController.getFrameAmount() * (particleController.getFrameDuration()+1);
     }
 
-    public AbstractParticle(Material baseItem, String entityID, int lifeTime, ParticleController particleController) {
+    public AbstractParticle(Material baseItem, String entityID, int lifeTime, FrameAnimation particleController) {
         super(EntityType.ITEM_DISPLAY, entityID);
-        this.particleController = particleController;
+        this.particleAnimation = particleController;
         this.baseItem = baseItem;
         this.lifeTime = lifeTime;
     }
@@ -34,7 +33,7 @@ public abstract class AbstractParticle extends AbstractTickingEntity {
     public abstract void particleTick(Entity e);
     public abstract void particleSpawnArgs(Entity e);
 
-    public ParticleController getParticleController() {return this.particleController;}
+    public FrameAnimation getParticleAnimation() {return this.particleAnimation;}
 
     public void setDisplaySize(Entity e, Vector3f size) {
         ItemDisplay ie = (ItemDisplay) e;
@@ -58,7 +57,7 @@ public abstract class AbstractParticle extends AbstractTickingEntity {
 
     @Override
     public void tick(Entity entity) {
-        getParticleController().tickFrames(entity);
+        getParticleAnimation().tickFrames(entity);
         particleTick(entity);
 
         if(isDuplicate(entity)) {
@@ -88,7 +87,7 @@ public abstract class AbstractParticle extends AbstractTickingEntity {
         ItemDisplay ie = (ItemDisplay) entity;
         ItemStack displayStack = new ItemStack(baseItem);
         ie.setItemStack(displayStack);
-        particleController.init(entity);
+        particleAnimation.init(entity);
         ie.setTeleportDuration(2);
         ie.setInterpolationDuration(1);
         particleSpawnArgs(entity);

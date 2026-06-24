@@ -1,10 +1,11 @@
 package net.shyvv.shivCore.entities.particle;
 
+import net.shyvv.shivCore.entities.animation.FrameAnimation;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 
 public class CustomParticle extends AbstractParticle {
-    public CustomParticle(Material baseItem, String entityID, ParticleController particleController) {
+    public CustomParticle(Material baseItem, String entityID, FrameAnimation particleController) {
         super(baseItem, entityID, particleController);
     }
 

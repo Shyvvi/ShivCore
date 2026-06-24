@@ -1,25 +1,25 @@
-package net.shyvv.shivCore.entities.particle;
+package net.shyvv.shivCore.entities.animation;
 
 import org.bukkit.util.Vector;
 
-public class ParticleFrame {
+public class Frame {
     int customModelData;
     float frameDisplaySize;
     Vector frameDisplaySizeVector;
-    public ParticleFrame(int customModelData) {
+    public Frame(int customModelData) {
         this.customModelData = customModelData;
         this.frameDisplaySize = 1;
         this.frameDisplaySizeVector = null;
     }
     /// frameDisplaySize controls the size of the Item Display when this frame is played, by default it is 1
-    public ParticleFrame(int customModelData, float frameDisplaySize) {
+    public Frame(int customModelData, float frameDisplaySize) {
         this.customModelData = customModelData;
         this.frameDisplaySize = frameDisplaySize;
         this.frameDisplaySizeVector = null;
     }
 
     /// Alternative for if you want to change the size of the Item Display along x, y and z
-    public ParticleFrame(int customModelData, Vector frameDisplaySizeVector) {
+    public Frame(int customModelData, Vector frameDisplaySizeVector) {
         this.customModelData = customModelData;
         this.frameDisplaySize = 0;
         this.frameDisplaySizeVector = frameDisplaySizeVector;

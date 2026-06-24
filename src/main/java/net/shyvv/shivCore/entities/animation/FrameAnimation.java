@@ -1,8 +1,7 @@
-package net.shyvv.shivCore.entities.particle;
+package net.shyvv.shivCore.entities.animation;
 
 import net.shyvv.shivCore.ShivCore;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemDisplay;
@@ -15,28 +14,26 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
-public class ParticleController {
-    private final List<ParticleFrame> customModelDatas;
+public class FrameAnimation {
+    private final List<Frame> customModelDatas;
     private final int frameDuration;
     private final Vector fixedSize;
     private final boolean facesCamera;
     private final int brightness;
+    private final Predicate<Entity> activePredicate;
 
     private final String activeFrameID = "activeFrame";
     private final String frameTimeID = "frameTime";
 
-    //Only used by the ParticleController builder, hence why it's private
-    private ParticleController(Builder builder, int frameDuration, boolean facesCamera, int brightness, Vector fixedSize) {
+    public FrameAnimation(Builder builder, int frameDuration, boolean facesCamera, int brightness, Vector fixedSize, Predicate<Entity> ap) {
         this.customModelDatas = builder.customModelDatas;
         this.fixedSize = fixedSize;
         this.facesCamera = facesCamera;
         this.brightness = brightness;
         this.frameDuration = frameDuration;
-    }
-
-    public void init(Entity e) {
-        setInt(e, 99999999, frameTimeID);
+        this.activePredicate = ap;
     }
 
     public void tickFrames(Entity e) {
@@ -67,7 +64,7 @@ public class ParticleController {
             ItemMeta im = is.getItemMeta();
             for(int i = 0; i < s; i++) {
                 if(af == i) {
-                    ParticleFrame frame = customModelDatas.get(i);
+                    Frame frame = customModelDatas.get(i);
                     float sizeX;
                     float sizeY;
                     float sizeZ;
@@ -119,14 +116,14 @@ public class ParticleController {
         }
     }
 
-    public ParticleFrame getFrame(int frame) {
+    public Frame getFrame(int frame) {
         try {
             return customModelDatas.get(frame);
         } catch (Exception ignored) {}
         return null;
     }
 
-    public ParticleFrame getActiveFrame(Entity e) {
+    public Frame getActiveFrame(Entity e) {
         int af = getInt(e, activeFrameID);
         for(int i = 0; i < customModelDatas.size(); i++) {
             if (af == i) {
@@ -134,6 +131,10 @@ public class ParticleController {
             }
         }
         return null;
+    }
+
+    public boolean isActive(Entity e) {
+        return this.activePredicate.test(e);
     }
 
     public int getFrameAmount() {
@@ -157,6 +158,10 @@ public class ParticleController {
         return 0;
     }
 
+    public void init(Entity e) {
+        setInt(e, 99999999, frameTimeID);
+    }
+
     // *cough cough* (I'm lazy)
     private int incrementInt(Entity entity, String id) {
         int i = getInt(entity, id);
@@ -175,13 +180,15 @@ public class ParticleController {
     }
 
     public static class Builder {
-        private final List<ParticleFrame> customModelDatas = new ArrayList<>();
+        private final List<Frame> customModelDatas = new ArrayList<>();
         private int brightness;
         private boolean facesCamera;
         private Vector fixedSize;
-        private int frameDuration;
-        public Builder(int frameDuration) {
+        private final int frameDuration;
+        private final Predicate<Entity> activePredicate;
+        public Builder(int frameDuration, Predicate<Entity> activePredicate) {
             this.frameDuration = frameDuration;
+            this.activePredicate = activePredicate;
         }
 
         public Builder setFixedSize(Vector size) {
@@ -206,13 +213,13 @@ public class ParticleController {
             return this;
         }
 
-        public Builder addFrame(ParticleFrame frame) {
+        public Builder addFrame(Frame frame) {
             customModelDatas.add(frame);
             return this;
         }
 
-        public ParticleController build() {
-            return new ParticleController(this, frameDuration, facesCamera, brightness, fixedSize);
+        public FrameAnimation build() {
+            return new FrameAnimation(this, frameDuration, facesCamera, brightness, fixedSize, activePredicate);
         }
     }
 }
