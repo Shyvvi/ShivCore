@@ -27,12 +27,12 @@ public class FrameAnimation {
     private final String activeFrameID = "activeFrame";
     private final String frameTimeID = "frameTime";
 
-    public FrameAnimation(Builder builder, int frameDuration, boolean facesCamera, int brightness, Vector fixedSize, Predicate<Entity> ap) {
+    public FrameAnimation(Builder builder, Predicate<Entity> ap) {
         this.customModelDatas = builder.customModelDatas;
-        this.fixedSize = fixedSize;
-        this.facesCamera = facesCamera;
-        this.brightness = brightness;
-        this.frameDuration = frameDuration;
+        this.fixedSize = builder.fixedSize;
+        this.facesCamera = builder.facesCamera;
+        this.brightness = builder.brightness;
+        this.frameDuration = builder.frameDuration;
         this.activePredicate = ap;
     }
 
@@ -219,7 +219,7 @@ public class FrameAnimation {
         }
 
         public FrameAnimation build() {
-            return new FrameAnimation(this, frameDuration, facesCamera, brightness, fixedSize, activePredicate);
+            return new FrameAnimation(this, activePredicate);
         }
     }
 }

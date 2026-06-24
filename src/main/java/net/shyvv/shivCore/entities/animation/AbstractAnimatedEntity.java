@@ -2,25 +2,40 @@ package net.shyvv.shivCore.entities.animation;
 
 import net.shyvv.shivCore.entities.AbstractTickingEntity;
 import net.shyvv.shivCore.entities.behavior.BehaviorController;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemDisplay;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ItemType;
 
-public class AbstractAnimatedEntity extends AbstractTickingEntity {
-
-    public AbstractAnimatedEntity(EntityType baseEntity, String entityID, BehaviorController behaviorController) {
-        super(baseEntity, entityID, behaviorController);
+public abstract class AbstractAnimatedEntity extends AbstractTickingEntity {
+    AnimationController animationController;
+    Material baseItem;
+    public AbstractAnimatedEntity(Material baseItem, String entityID, BehaviorController behaviorController, AnimationController ac) {
+        super(EntityType.ITEM_DISPLAY, entityID, behaviorController);
+        this.baseItem = baseItem;
+        this.animationController = ac;
     }
-    public AbstractAnimatedEntity(EntityType baseEntity, String entityID) {
-        super(baseEntity, entityID);
+    public AbstractAnimatedEntity(Material baseItem, String entityID, AnimationController ac) {
+        this(baseItem, entityID, null, ac);
     }
 
     @Override
     public void tick(Entity entity) {
-
+        animationController.tickAnimations(entity);
     }
 
     @Override
     protected void spawnArgs(Entity entity) {
-
+        ItemDisplay ie = (ItemDisplay) entity;
+        ItemStack displayStack = new ItemStack(baseItem);
+        ie.setItemStack(displayStack);
+        for(FrameAnimation fa : animationController.animations) fa.init(entity);
+        ie.setTeleportDuration(2);
+        ie.setInterpolationDuration(1);
     }
+
+    public abstract void entityTick(Entity e);
+    public abstract void entitySpawnArgs(Entity e);
 }

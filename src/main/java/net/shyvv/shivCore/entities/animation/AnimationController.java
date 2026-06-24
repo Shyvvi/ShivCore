@@ -5,10 +5,10 @@ import org.bukkit.entity.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FrameController {
+public class AnimationController {
     List<FrameAnimation> animations;
     DefaultFrameAnimation defaultAnimation;
-    public FrameController(List<FrameAnimation> animations, DefaultFrameAnimation defaultAnimation) {
+    public AnimationController(List<FrameAnimation> animations, DefaultFrameAnimation defaultAnimation) {
         this.animations = animations;
         this.defaultAnimation = defaultAnimation;
     }
@@ -38,8 +38,8 @@ public class FrameController {
             return this;
         }
 
-        public FrameController build() {
-            return new FrameController(animations, defaultAnimation);
+        public AnimationController build() {
+            return new AnimationController(animations, defaultAnimation);
         }
     }
 }
