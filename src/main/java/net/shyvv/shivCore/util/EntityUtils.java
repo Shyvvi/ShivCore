@@ -6,6 +6,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.persistence.PersistentDataType;
 
+@Deprecated
 public interface EntityUtils {
 
     /// Set a boolean to an entity's PersistentDataContainer

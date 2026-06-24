@@ -10,7 +10,7 @@ public class DamageManager {
     public static List<String> damageTypeIDList = new ArrayList<>();
 
     static {
-        damageTypeList.add(new DamageType("empty", "died", false));
+        damageTypeList.add(new DamageType.Builder("empty", "died").build());
     }
 
     public static void initialize() {

@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServerUtil {
@@ -12,6 +13,8 @@ public class ServerUtil {
     public static final String OPEN_UI_CMD = "openui";
     public static final String GIVE_ITEM_CMD = "giveitem";
     private static final Map<String, AtomicInteger> atomicIntegers = new ConcurrentHashMap<>();
+    private static final Map<String, AtomicBoolean> atomicBooleans = new ConcurrentHashMap<>();
+
 
     public static void registerCommand(Command cmdClass) {
         try {
@@ -40,11 +43,20 @@ public class ServerUtil {
         atomicIntegers.computeIfAbsent(id, k -> new AtomicInteger(0)).set(value);
     }
 
-    public static void delete(String id) {
+    public static void deleteInteger(String id) {
         atomicIntegers.remove(id);
     }
 
-    public static void clearAll() {
-        atomicIntegers.clear();
+    public static boolean getBoolean(String id) {
+        AtomicBoolean value = atomicBooleans.get(id);
+        return value.get();
+    }
+
+    public static void setBoolean(String id, boolean value) {
+        atomicBooleans.computeIfAbsent(id, k -> new AtomicBoolean(false)).set(value);
+    }
+
+    public static void deleteBoolean(String id) {
+        atomicBooleans.remove(id);
     }
 }

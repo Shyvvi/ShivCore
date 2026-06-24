@@ -1,15 +1,16 @@
 package net.shyvv.shivCore.util;
 
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.joml.Vector2d;
 
 import java.util.Collection;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class RaycastBuilder {
+public class Raycast {
     boolean collidesBlocks;
     boolean collidesEntities;
     boolean piercesEntities;
@@ -19,10 +20,11 @@ public class RaycastBuilder {
     int steps;
     Predicate<Block> blockCollideCondition;
     Predicate<Entity> exemptEntityCondition;
-    Consumer<Entity> entityCollideEffect;
-    Consumer<Location> stepEffect;
-    Consumer<Block> blockCollideEffect;
-    private RaycastBuilder(Builder builder) {
+    BiConsumer<Entity, Integer> entityCollideEffect;
+    BiConsumer<Location, Integer> raycastEndEffect;
+    BiConsumer<Location, Integer> stepEffect;
+    BiConsumer<Block, Integer> blockCollideEffect;
+    private Raycast(Builder builder) {
         this.collidesBlocks = builder.collidesBlocks;
         this.collidesEntities = builder.collidesEntities;
         this.blockPhaseStepAmount = builder.blockPhaseStepAmount;
@@ -35,39 +37,51 @@ public class RaycastBuilder {
         this.stepEffect = builder.stepEffect;
         this.entityCollideEffect = builder.entityCollideEffect;
         this.piercesEntities = builder.piercesEntities;
+        this.raycastEndEffect = builder.raycastEndEffect;
     }
 
     /**
      * Create a raycast
-     * @param loc create a raycast at the location (provide direction values in Location)
+     * @param startingLoc create a raycast at the location (provide direction values in Location)
      */
-    public void raycast(Location loc) {
+    public void raycast(Location startingLoc) {
         for(int x = 0; x<steps; x++) {
-            stepEffect.accept(loc);
-
-            if(collidesBlocks && blockCollideCondition.test(loc.getBlock())) {
+            Location loc = MiscUtil.getRelativeLocation(startingLoc, steps*stepDistance, 0, 0);
+            ServerUtil.setBoolean("raycastCollided", false);
+            stepEffect.accept(loc, x);
+            if(collidesBlocks && blockCollideCondition != null && blockCollideCondition.test(loc.getBlock())) {
                 if(blockPhaseStepAmount > 0) {
                     int i = ServerUtil.incrementInt("raycastPhaseTracking");
                     if(i >= blockPhaseStepAmount) {
-
+                        if(blockCollideEffect != null) blockCollideEffect.accept(loc.getBlock(), x);
+                        ServerUtil.setBoolean("raycasCollided", true);
+                        break;
                     }
                 } else {
-
-                }
-                break;
-            }
-            if(collidesEntities) {
-                Collection<Entity> collidingEntities = loc.getWorld().getNearbyEntities(loc, collisionSize, collisionSize, collisionSize);
-                collidingEntities.removeIf(exemptEntityCondition);
-                for (Entity ce : collidingEntities) {
-                    entityCollideEffect.accept(ce);
-                }
-                if (!collidingEntities.isEmpty() && !piercesEntities) {
+                    if(blockCollideEffect != null) blockCollideEffect.accept(loc.getBlock(), x);
+                    ServerUtil.setBoolean("raycasCollided", true);
                     break;
                 }
             }
+
+            if(collidesEntities) {
+                Collection<Entity> collidingEntities = loc.getWorld().getNearbyEntities(loc, collisionSize, collisionSize, collisionSize);
+                if(exemptEntityCondition != null) collidingEntities.removeIf(exemptEntityCondition);
+                if(entityCollideEffect != null) {
+                    for (Entity ce : collidingEntities) {
+                        entityCollideEffect.accept(ce, x);
+                    }
+                }
+                if (!collidingEntities.isEmpty() && !piercesEntities) {
+                    ServerUtil.setBoolean("raycasCollided", true);
+                    break;
+                }
+            }
+
+            if(x==steps && raycastEndEffect != null) raycastEndEffect.accept(loc, x);
         }
-        ServerUtil.delete("raycastPhaseTracking");
+        ServerUtil.deleteBoolean("raycastCollided");
+        ServerUtil.deleteInteger("raycastPhaseTracking");
     }
 
     /**
@@ -76,7 +90,9 @@ public class RaycastBuilder {
      * @param loc2 target location
      */
     public void raycast(Location loc1, Location loc2) {
-
+        Vector2d angle = MiscUtil.get2DAngleBetweenVectors(loc1.toVector(), loc2.toVector());
+        Location loc = new Location(loc1.getWorld(), loc1.x(), loc1.y(), loc1.z(), (float)angle.x, (float)angle.y);
+        raycast(loc);
     }
 
     public static class Builder {
@@ -89,9 +105,10 @@ public class RaycastBuilder {
         int steps;
         Predicate<Entity> exemptEntityCondition = null;
         Predicate<Block> blockCollideCondition = null;
-        Consumer<Entity> entityCollideEffect = null;
-        Consumer<Location> stepEffect = null;
-        Consumer<Block> blockCollideEffect = null;
+        BiConsumer<Entity, Integer> entityCollideEffect = null;
+        BiConsumer<Location, Integer> stepEffect = null;
+        BiConsumer<Location, Integer> raycastEndEffect = null;
+        BiConsumer<Block, Integer> blockCollideEffect = null;
         public Builder(int steps, double stepDistance) {
             this.steps = steps;
             this.stepDistance = stepDistance;
@@ -138,16 +155,6 @@ public class RaycastBuilder {
         }
 
         /**
-         * Whether the raycast collides with blocks or not
-         * @param bool boolean
-         * @return Builder
-         */
-        public Builder setCollidesBlocks(boolean bool) {
-            this.collidesBlocks = bool;
-            return this;
-        }
-
-        /**
          * The amount of steps a raycast can ignore the block collision predicate for
          * @param blockPhaseStepAmount number of steps collision will be ignored
          * @return Builder
@@ -182,7 +189,7 @@ public class RaycastBuilder {
          * @param consumer block collide effect
          * @return Builder
          */
-        public Builder blockCollideEffect(Consumer<Block> consumer) {
+        public Builder blockCollideEffect(BiConsumer<Block, Integer> consumer) {
             this.blockCollideEffect = consumer;
             return this;
         }
@@ -192,23 +199,33 @@ public class RaycastBuilder {
          * @param consumer this is great for decorating your raycast with things such as particles
          * @return Builder
          */
-        public Builder stepEffect(Consumer<Location> consumer) {
+        public Builder stepEffect(BiConsumer<Location, Integer> consumer) {
             this.stepEffect = consumer;
             return this;
         }
 
         /**
-         * Consume for what happens when an entity collides with the raycast
+         * Consumer for what happens when an entity collides with the raycast
          * @param consumer entity collide effect
          * @return Builder
          */
-        public Builder entityCollideEffect(Consumer<Entity> consumer) {
+        public Builder entityCollideEffect(BiConsumer<Entity, Integer> consumer) {
             this.entityCollideEffect = consumer;
             return this;
         }
 
-        public RaycastBuilder build() {
-            return new RaycastBuilder(this);
+        /**
+         * Consumer for what happens when a raycast ends without colliding with a block or entity
+         * @param consumer raycast end effect
+         * @return Builder
+         */
+        public Builder raycastEndEffect(BiConsumer<Location, Integer> consumer) {
+            this.raycastEndEffect = consumer;
+            return this;
+        }
+
+        public Raycast build() {
+            return new Raycast(this);
         }
     }
 }

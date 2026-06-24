@@ -4,7 +4,9 @@ import org.bukkit.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
+@SuppressWarnings("rawtypes")
 public class BehaviorController {
     private final List<Behavior> behaviors;
     private final Behavior defaultBehavior;
@@ -48,15 +50,15 @@ public class BehaviorController {
         return null;
     }
 
-    public void setActive(Entity e, String behaviorID, boolean active) {
-        Behavior behavior = getBehavior(behaviorID);
-        behavior.setActive(e, active);
-    }
-
     public static class Builder {
         private final List<Behavior> behaviors = new ArrayList<>();
         private Behavior defaultBehavior;
 
+        /**
+         * Adds a behavior to the BehaviorController
+         * @param behavior the entity ticking behavior
+         * @param <T> static class extending Behavior
+         */
         public <T extends Behavior> Builder addBehavior(T behavior) {
             behaviors.add(behavior);
             return this;
