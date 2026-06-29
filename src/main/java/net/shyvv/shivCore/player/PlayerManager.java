@@ -1,4 +1,4 @@
-package net.shyvv.shivCore.util;
+package net.shyvv.shivCore.player;
 
 import net.shyvv.shivCore.ShivCore;
 import org.bukkit.entity.Player;

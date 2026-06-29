@@ -1,4 +1,4 @@
-package net.shyvv.shivCore.util;
+package net.shyvv.shivCore.player;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -2,7 +2,7 @@ package net.shyvv.shivCore;
 
 import net.shyvv.shivCore.constants.Commands;
 import net.shyvv.shivCore.util.EntityManager;
-import net.shyvv.shivCore.util.PlayerManager;
+import net.shyvv.shivCore.player.PlayerManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.LoggerFactory;
 

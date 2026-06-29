@@ -4,7 +4,10 @@ import net.shyvv.shivCore.ShivCore;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
+import org.bukkit.persistence.ListPersistentDataType;
 import org.bukkit.persistence.PersistentDataType;
+
+import java.util.List;
 
 public class EntityUtil {
     /// Set a boolean to an entity's PersistentDataContainer
@@ -45,6 +48,20 @@ public class EntityUtil {
             return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.INTEGER);
         }
         return 0;
+    }
+
+    /// Set a String List to an entity's PersistentDataContainer
+    public static void setStringList(Entity entity, List<String> value, String id) {
+        entity.getPersistentDataContainer().set(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.LIST.strings(), value);
+    }
+
+    /// Get a String List from an entity's PersistentDataContainer
+    @SuppressWarnings("DataFlowIssue")
+    public static List<String> getStringList(Entity entity, String id) {
+        if(entity.getPersistentDataContainer().has(new NamespacedKey(ShivCore.getInstance(), id))) {
+            return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.LIST.strings());
+        }
+        return null;
     }
 
     /// Set a float to an entity's PersistentDataContainer

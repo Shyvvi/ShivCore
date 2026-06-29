@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class GiveItemCommand extends SCCommand {
-    protected GiveItemCommand(@NotNull String cmdID, String description, String usageMessage) {
+    public GiveItemCommand(@NotNull String cmdID, String description, String usageMessage) {
         super(cmdID, description, usageMessage);
     }
 
