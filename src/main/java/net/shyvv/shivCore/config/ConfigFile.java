@@ -9,14 +9,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressWarnings("rawtypes")
 public class ConfigFile {
     private final JavaPlugin plugin;
     private FileConfiguration config;
     private File configFile;
     private final String name;
-    List<DefaultConfig> defaultConfigList;
-    public ConfigFile(String name, JavaPlugin plugin, DefaultConfig... defaultConfigList) {
+    List<AbstractDefaultConfig> defaultConfigList;
+    public ConfigFile(String name, JavaPlugin plugin, AbstractDefaultConfig... defaultConfigList) {
         this.name = name;
         this.plugin = plugin;
         this.defaultConfigList = new ArrayList<>(List.of(defaultConfigList));
@@ -31,7 +31,7 @@ public class ConfigFile {
         config = YamlConfiguration.loadConfiguration(this.getConfigFile());
         saveConfig();
 
-        for(DefaultConfig dc : defaultConfigList) {
+        for(AbstractDefaultConfig dc : defaultConfigList) {
             ShivCore.log.info("Creating defaultConfig - {}", dc.key);
             dc.initializeDefault(this);
         }
@@ -46,9 +46,8 @@ public class ConfigFile {
         }
     }
 
-    public String addDefaultConfig(DefaultConfig defaultConfig) {
+    public void addDefaultConfig(AbstractDefaultConfig defaultConfig) {
         this.defaultConfigList.add(defaultConfig);
-        return defaultConfig.defaultValue;
     }
 
     private File getConfigFile() {
@@ -61,6 +60,14 @@ public class ConfigFile {
 
     public void setString(String key, String value) {
         config.set(key, value);
+    }
+
+    public void setValue(String key, Object value) {
+        setString(key, value.toString());
+    }
+
+    public String getValue(String key) {
+        return getString(key);
     }
 
     public boolean stringExists(String key) {

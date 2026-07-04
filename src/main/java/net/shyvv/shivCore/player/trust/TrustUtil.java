@@ -6,17 +6,21 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class TrustUtil {
-    public static void setPlayerTrusted(Player truster, Player trusted, boolean value) {
+    public static void setPlayerTrusted(Player truster, String trustedName, boolean value) {
         List<String> l = EntityUtil.getStringList(truster, "trustedPlayers");
         if(l != null) {
-            if (value) l.add(trusted.getName());
-            else l.remove(trusted.getName());
+            if (value) l.add(trustedName);
+            else l.remove(trustedName);
         }
         EntityUtil.setStringList(truster, l, "trustedPlayers");
     }
 
-    public static boolean playerIsTrusted(Player truster, Player trusted) {
+    public static boolean playerIsTrusted(Player truster, String trustedName) {
         List<String> l = EntityUtil.getStringList(truster, "trustedPlayers");
-        return l != null && l.contains(trusted.getName());
+        return l != null && l.contains(trustedName);
+    }
+
+    public static List<String> getTrustedPlayers(Player truster) {
+        return EntityUtil.getStringList(truster, "trustedPlayers");
     }
 }

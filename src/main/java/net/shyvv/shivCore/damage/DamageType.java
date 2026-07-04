@@ -1,42 +1,53 @@
 package net.shyvv.shivCore.damage;
 
+import net.shyvv.shivCore.constants.Configs;
+import net.shyvv.shivCore.player.trust.TrustUtil;
 import net.shyvv.shivCore.util.EntityUtils;
 import net.shyvv.shivCore.util.Raycast;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.joml.Vector2d;
 
-import java.util.function.BiConsumer;
-import java.util.function.Predicate;
+import javax.annotation.Nullable;
 
 public class DamageType implements EntityUtils {
     String deathMessage;
     String damageTypeID;
     int ignitionTime;
     boolean ignoresIFrames;
+    boolean damagesTrustedPlayers;
     Vector2d knockback;
     private DamageType(DamageType.Builder builder) {
         this.damageTypeID = builder.damageTypeID;
         this.deathMessage = builder.deathMessage;
         this.ignoresIFrames = builder.ignoresIFrames;
+        this.damagesTrustedPlayers = builder.damagesTrustedPlayers;
         this.knockback = builder.knockback;
         this.ignitionTime = builder.ignitionTime;
         DamageManager.damageTypeList.add(this);
     }
 
-    public void damage(LivingEntity victim, double amount) {
+    public void damage(LivingEntity victim, @Nullable LivingEntity attacker, double amount) {
         for(int i = 0; i<DamageManager.damageTypeList.size(); i++) {
             if(damageTypeID.equals(DamageManager.damageTypeList.get(i).damageTypeID)) {
                 setInt(victim, i, "customDamageType");
                 break;
             }
         }
-        victim.damage(amount);
+        if(victim instanceof Player pv) {
+            if(attacker instanceof Player pa && TrustUtil.playerIsTrusted(pa, pv.getName()) && damagesTrustedPlayers) {
+                pv.damage(Float.parseFloat(Configs.SHIVCORE_CONFIG.getValue("trustedPlayersDamageReduction"))*amount);
+            }
+            pv.damage(amount);
+        } else {
+            victim.damage(Float.parseFloat(Configs.SHIVCORE_CONFIG.getValue("mobDamageMultiplier"))*amount);
+        }
     }
 
-    public void damageAoERaycasts(Location loc, double amount, int size, double damageFalloff) {
+    public void damageAoERaycasts(@Nullable LivingEntity attacker, Location loc, double amount, int size, double damageFalloff) {
         for(Entity e : loc.getNearbyLivingEntities(size, size, size)) {
             Raycast rc = new Raycast.Builder(size, 0.1)
                     .collidesEntities(true)
@@ -45,7 +56,7 @@ public class DamageType implements EntityUtils {
                     .setBlockPhaseStepAmount(5)
                     .entityCollideEffect((entity, integer) -> {
                         if (entity instanceof LivingEntity li) {
-                            damage(li, amount - (damageFalloff * integer));
+                            damage(li, attacker, amount - (damageFalloff * integer));
                         }
                     })
                     .build();
@@ -67,6 +78,7 @@ public class DamageType implements EntityUtils {
     public static class Builder {
         int ignitionTime = 0;
         boolean ignoresIFrames = false;
+        boolean damagesTrustedPlayers = true;
         Vector2d knockback = new Vector2d(0,0);
         String damageTypeID;
         String deathMessage;
@@ -85,8 +97,13 @@ public class DamageType implements EntityUtils {
             return this;
         }
 
-        public Builder setIgnoresIFrames(boolean bool) {
+        public Builder ignoresIFrames(boolean bool) {
             this.ignoresIFrames = bool;
+            return this;
+        }
+
+        public Builder damagesTrustedPlayers(boolean bool) {
+            this.damagesTrustedPlayers = bool;
             return this;
         }
 
