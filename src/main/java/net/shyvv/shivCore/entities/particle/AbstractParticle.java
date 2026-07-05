@@ -2,6 +2,7 @@ package net.shyvv.shivCore.entities.particle;
 
 import net.shyvv.shivCore.entities.AbstractTickingEntity;
 import net.shyvv.shivCore.entities.animation.FrameAnimation;
+import net.shyvv.shivCore.util.EntityUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -48,7 +49,7 @@ public abstract class AbstractParticle extends AbstractTickingEntity {
 
     public void displaceDuplicate(Entity entity) {
         for(Entity e : entity.getNearbyEntities(2, 2, 2)) {
-            if(getString(entity, "dupeTarget").equals(getString(e, "dupeTarget"))) {
+            if(EntityUtil.getString(entity, "dupeTarget").equals(EntityUtil.getString(e, "dupeTarget"))) {
                 entity.teleport(e.getLocation().add(0.0, -0.05, 0.0));
                 break;
             }
@@ -71,12 +72,12 @@ public abstract class AbstractParticle extends AbstractTickingEntity {
                         dt.getRightRotation())
                 );
             }
-            if(hasMoved(entity)) {
+            if(EntityUtil.hasMoved(entity)) {
                 displaceDuplicate(entity);
             }
         }
 
-        int lt = incrementInt(entity, "lifeTime");
+        int lt = EntityUtil.incrementInt(entity, "lifeTime");
         if(lt > lifeTime) {
             entity.remove();
         }

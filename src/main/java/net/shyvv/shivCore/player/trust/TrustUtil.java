@@ -3,16 +3,27 @@ package net.shyvv.shivCore.player.trust;
 import net.shyvv.shivCore.util.EntityUtil;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TrustUtil {
     public static void setPlayerTrusted(Player truster, String trustedName, boolean value) {
-        List<String> l = EntityUtil.getStringList(truster, "trustedPlayers");
-        if(l != null) {
-            if (value) l.add(trustedName);
-            else l.remove(trustedName);
+        List<String> existing = EntityUtil.getStringList(truster, "trustedPlayers");
+        List<String> l = existing == null ? new ArrayList<>() : new ArrayList<>(existing);
+
+        if (value) {
+            if (!l.contains(trustedName)) {
+                l.add(trustedName);
+            }
+        } else {
+            l.remove(trustedName);
         }
+
         EntityUtil.setStringList(truster, l, "trustedPlayers");
+    }
+
+    public static void resetTrustedPlayers(Player p) {
+        EntityUtil.setStringList(p, new ArrayList<>(), "trustedPlayers");
     }
 
     public static boolean playerIsTrusted(Player truster, String trustedName) {

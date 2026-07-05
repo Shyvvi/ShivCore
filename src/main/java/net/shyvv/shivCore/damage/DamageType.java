@@ -2,7 +2,7 @@ package net.shyvv.shivCore.damage;
 
 import net.shyvv.shivCore.constants.Configs;
 import net.shyvv.shivCore.player.trust.TrustUtil;
-import net.shyvv.shivCore.util.EntityUtils;
+import net.shyvv.shivCore.util.EntityUtil;
 import net.shyvv.shivCore.util.Raycast;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -13,7 +13,7 @@ import org.joml.Vector2d;
 
 import javax.annotation.Nullable;
 
-public class DamageType implements EntityUtils {
+public class DamageType {
     String deathMessage;
     String damageTypeID;
     int ignitionTime;
@@ -33,7 +33,7 @@ public class DamageType implements EntityUtils {
     public void damage(LivingEntity victim, @Nullable LivingEntity attacker, double amount) {
         for(int i = 0; i<DamageManager.damageTypeList.size(); i++) {
             if(damageTypeID.equals(DamageManager.damageTypeList.get(i).damageTypeID)) {
-                setInt(victim, i, "customDamageType");
+                EntityUtil.setInt(victim, i, "customDamageType");
                 break;
             }
         }

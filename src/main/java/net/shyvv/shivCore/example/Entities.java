@@ -35,7 +35,7 @@ public class Entities {
                     .setBrightness(10)
                     .setFacesCamera(true)
                     .build())
-            .addAnimation(new FrameAnimation.Builder(3, _ -> true) // default animation as it is at the bottom of the hierarchy
+            .addAnimation(new FrameAnimation.Builder(3, e -> true) // default animation as it is at the bottom of the hierarchy
                     .addFrame(new Frame(7, 7))
                     .addFrame(new Frame(8, 8))
                     .addFrame(new Frame(9, 9))
@@ -45,7 +45,7 @@ public class Entities {
             .build()
     );
 
-    public static CustomParticle TEST_PARTICLE = new CustomParticle(Material.COMMAND_BLOCK, "testParticle", new FrameAnimation.Builder(3, _ -> true)
+    public static CustomParticle TEST_PARTICLE = new CustomParticle(Material.COMMAND_BLOCK, "testParticle", new FrameAnimation.Builder(3, e -> true)
             .addFrame(new Frame(1, 4))
             .addFrame(new Frame(2, 5))
             .addFrame(new Frame(3, 6))

@@ -1,6 +1,7 @@
 package net.shyvv.shivCore.entities;
 
 import net.shyvv.shivCore.entities.behavior.BehaviorController;
+import net.shyvv.shivCore.util.EntityUtil;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
@@ -21,7 +22,7 @@ public abstract class TemporaryEntity extends AbstractTickingEntity {
     @Override
     public void tick(Entity entity) {
         entityTick(entity);
-        int lt = incrementInt(entity, "lifeTime");
+        int lt = EntityUtil.incrementInt(entity, "lifeTime");
         if(lt > entityLifetime()) {
             entity.remove();
         }

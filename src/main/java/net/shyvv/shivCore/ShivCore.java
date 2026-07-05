@@ -1,6 +1,8 @@
 package net.shyvv.shivCore;
 
 import net.shyvv.shivCore.constants.Commands;
+import net.shyvv.shivCore.constants.Configs;
+import net.shyvv.shivCore.item.ItemManager;
 import net.shyvv.shivCore.util.EntityManager;
 import net.shyvv.shivCore.player.PlayerManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,7 +16,9 @@ public final class ShivCore extends JavaPlugin {
         providingPlugin = plugin;
         log = LoggerFactory.getLogger(providingPlugin.getClass());
 
+        Configs.initialize();
         Commands.initialize();
+        ItemManager.initialize();
         PlayerManager.initialize();
         EntityManager.initialize();
     }

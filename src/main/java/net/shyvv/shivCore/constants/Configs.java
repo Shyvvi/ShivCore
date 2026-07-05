@@ -14,4 +14,5 @@ public class Configs {
             new FloatDefaultConfig("mobDamageMultiplier", 0.5f, List.of("The percentage of damage which is dealt to mobs."))
     );
 
+    public static void initialize() {}
 }

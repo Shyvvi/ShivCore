@@ -21,7 +21,7 @@ public class CustomDamageCommand extends SCCommand{
             if(DamageManager.damageTypeIDList.contains(args[0])) {
                 for(DamageType d : DamageManager.damageTypeList) {
                     if(d.getDamageTypeID().equals(args[0])) {
-                        d.damage(p, Double.parseDouble(args[1]));
+                        d.damage(p, null, Double.parseDouble(args[1]));
                         break;
                     }
                 }

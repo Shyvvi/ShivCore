@@ -23,21 +23,22 @@ import java.util.List;
 
 public class InvUserInterface {
     String ID;
+    boolean cancelsInteraction;
     int unicode;
     int invSize;
     TextComponent title;
     Map<UUID, Inventory> inventories = new HashMap<>();
     List<UIElement> baseUIElements;
     ItemStack emptyFill;
-    private InvUserInterface(String interfaceID, int invSize, String title, int unicode, String negativeSpacesGUI, String negativeSpacesTitle, TextColor color, Builder builder) {
-        this.ID = interfaceID;
-        this.invSize = invSize;
-        this.title = Component.text().append(Component.text(negativeSpacesGUI + Character.toString(unicode), NamedTextColor.WHITE)).append(Component.text(negativeSpacesTitle + title, color)).build();
-        ShivCore.log.info("Interface {} with unicode value of: {}", interfaceID, Character.toString(unicode));
+    private InvUserInterface( Builder builder) {
+        this.ID = builder.interfaceID;
+        this.invSize = builder.invSize;
+        this.title = Component.text().append(Component.text(builder.negativeSpacesGui + Character.toString(unicode), NamedTextColor.WHITE)).append(Component.text(builder.negativeSpacesTitle + title, builder.color)).build();
+        ShivCore.log.info("Interface {} with unicode value of: {}", builder.interfaceID, Character.toString(unicode));
         this.baseUIElements = builder.uiElements;
         this.emptyFill = builder.emptyFill;
-        this.unicode = unicode;
-
+        this.unicode = builder.unicode;
+        this.cancelsInteraction = builder.cancelsInteraction;
         GUIManager.USER_INTERFACES.add(this);
     }
 
@@ -49,7 +50,9 @@ public class InvUserInterface {
     }
 
     public void onInventoryClick(InventoryClickEvent e) {
-        e.setCancelled(true);
+        if(!cancelsInteraction) {
+            e.setCancelled(true);
+        }
         ItemStack clicked = e.getCurrentItem();
         HumanEntity entity = e.getWhoClicked();
         if(clicked != null && entity instanceof Player p && e.getInventory().equals(getInvGUI(p))) {
@@ -57,6 +60,8 @@ public class InvUserInterface {
                 if (getItemID(clicked).equals(uie.getID(p))) {
                     if(uie instanceof UIClickable uir) {
                         uir.onClick(p);
+                    } else if(uie instanceof UICancelsInteraction) {
+                        e.setCancelled(true);
                     }
                     break;
                 }
@@ -136,6 +141,7 @@ public class InvUserInterface {
         List<UIElement> uiElements = new ArrayList<>();
         ItemStack emptyFill = null;
 
+        boolean cancelsInteraction = false;
         int invSize;
         int unicode = 0;
         String interfaceID;
@@ -148,6 +154,11 @@ public class InvUserInterface {
             this.interfaceID = interfaceID;
             this.invSize = invSize;
             this.title = title;
+        }
+
+        public Builder cancelsInteraction(boolean value) {
+            this.cancelsInteraction = value;
+            return this;
         }
 
         public Builder addUIElement(UIElement uiElement) {
@@ -186,7 +197,7 @@ public class InvUserInterface {
         }
 
         public InvUserInterface build() {
-            return new InvUserInterface(interfaceID, invSize, title, unicode, negativeSpacesGui, negativeSpacesTitle, color, this);
+            return new InvUserInterface(this);
         }
     }
 }

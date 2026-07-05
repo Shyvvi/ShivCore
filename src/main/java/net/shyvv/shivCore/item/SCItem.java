@@ -8,19 +8,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.ApiStatus;
 
-public class SCItem {
+public abstract class SCItem {
     ItemStack defaultItemStack;
     String itemID;
-    private SCItem(ItemStack defaultItemStack, String itemID) {
+    public SCItem(ItemStack defaultItemStack, String itemID) {
         this.defaultItemStack = ItemStackBuilder.setItemStackData(defaultItemStack, "itemID", PersistentDataType.STRING, itemID);
         this.itemID = itemID;
         ItemManager.CUSTOM_ITEMS.add(this);
     }
 
-    @ApiStatus.OverrideOnly
-    public void onPlayerInteract(PlayerInteractEvent e) {}
-    @ApiStatus.OverrideOnly
-    public void onPlayerEntityInteract(PlayerInteractEntityEvent e) {}
+    public abstract void onPlayerInteract(PlayerInteractEvent e);
+    public abstract void onPlayerEntityInteract(PlayerInteractEntityEvent e);
 
     public ItemStack getDefaultItemStack() {
         return defaultItemStack;

@@ -1,10 +1,17 @@
 package net.shyvv.shivCore.commands;
 
+import net.shyvv.shivCore.item.ItemManager;
+import net.shyvv.shivCore.item.SCItem;
 import net.shyvv.shivCore.ui.InvUserInterface;
 import net.shyvv.shivCore.ui.GUIManager;
+import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OpenUICommand extends SCCommand {
     public OpenUICommand(@NotNull String cmdID, String description, String usageMessage) {
@@ -32,5 +39,18 @@ public class OpenUICommand extends SCCommand {
             sendError(sender, "You do not have permission to use this command.");
         }
         return true;
+    }
+
+    @Override
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws CommandException, IllegalArgumentException {
+        List<String> tabComplete = new ArrayList<>();
+        if(args.length == 1) {
+            for(InvUserInterface ate : GUIManager.USER_INTERFACES) {
+                tabComplete.add(ate.getID());
+            }
+            return tabComplete;
+        }
+
+        return tabComplete;
     }
 }

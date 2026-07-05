@@ -1,10 +1,9 @@
 package net.shyvv.shivCore.entities;
 
-import net.kyori.adventure.text.Component;
 import net.shyvv.shivCore.ShivCore;
 import net.shyvv.shivCore.entities.behavior.BehaviorController;
 import net.shyvv.shivCore.util.EntityManager;
-import net.shyvv.shivCore.util.EntityUtils;
+import net.shyvv.shivCore.util.EntityUtil;
 import net.shyvv.shivCore.util.MiscUtil;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
-public abstract class AbstractTickingEntity implements EntityUtils {
+public abstract class AbstractTickingEntity {
     final EntityType baseEntity;
     final String entityID;
     BehaviorController behaviorController = null;
@@ -148,15 +147,15 @@ public abstract class AbstractTickingEntity implements EntityUtils {
      */
     public Entity spawn(Location loc, boolean isDuplicate) {
         String id = UUID.randomUUID().toString();
-        setString(spawn(loc), id, "dupeTarget");
+        EntityUtil.setString(spawn(loc), id, "dupeTarget");
         Entity e = spawn(loc);
-        setString(e, id, "dupeTarget");
-        setBoolean(e, isDuplicate, "isDuplicate");
+        EntityUtil.setString(e, id, "dupeTarget");
+        EntityUtil.setBoolean(e, isDuplicate, "isDuplicate");
         return e;
     }
 
     public boolean isDuplicate(Entity entity) {
-        return getBoolean(entity, "isDuplicate");
+        return EntityUtil.getBoolean(entity, "isDuplicate");
     }
 
     @ApiStatus.OverrideOnly

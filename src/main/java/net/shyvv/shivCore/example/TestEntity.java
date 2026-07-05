@@ -4,6 +4,7 @@ import net.shyvv.shivCore.entities.AbstractTickingEntity;
 import net.shyvv.shivCore.entities.behavior.Behavior;
 import net.shyvv.shivCore.entities.behavior.BehaviorController;
 import net.shyvv.shivCore.entities.behavior.DefaultBehavior;
+import net.shyvv.shivCore.util.EntityUtil;
 import net.shyvv.shivCore.util.MiscUtil;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -21,7 +22,7 @@ public class TestEntity extends AbstractTickingEntity {
     @Override
     public void tick(Entity entity) {
         BehaviorController behaviors = this.getBehaviorController();
-        incrementInt(entity, "lifetime");
+        EntityUtil.incrementInt(entity, "lifetime");
     }
 
     @Override

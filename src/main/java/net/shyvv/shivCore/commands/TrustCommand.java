@@ -25,30 +25,35 @@ public class TrustCommand extends SCCommand {
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String @NotNull [] args) {
         if(sender instanceof Player p && p.isOp()) {
             if(args.length >= 1) {
-                if (args[1].equals(VALID_ARGS1[0]) || args[1].equals(VALID_ARGS1[1])) {
+                if (args[0].equals(VALID_ARGS1[0]) || args[0].equals(VALID_ARGS1[1])) {
                     OfflinePlayer opl = Bukkit.getServer().getOfflinePlayer(args[1]);
                     if (opl.hasPlayedBefore()) {
-                        boolean b = args[1].equals(VALID_ARGS1[0]) && !args[1].equals(VALID_ARGS1[1]);
+                        boolean b = args[0].equals(VALID_ARGS1[0]) && !args[0].equals(VALID_ARGS1[1]);
                         TrustUtil.setPlayerTrusted(p, opl.getName(), b);
                         sendMsg(p, b ? "Added "+args[1]+" onto your trusted players list." : "Removed "+args[1]+" from your trusted players list.");
+                    } else if (opl.getName().equals(p.getName())) {
+                        sendError(p, "\"As soon as you trust yourself, you will know how to live.\" - Johann Wolfgang von Goethe");
                     } else {
                         sendError(p, args[1] + " has not logged on before or does not exist.");
                     }
-                } else if(args[1].equals(VALID_ARGS1[2])) {
-                    sendMsg(p, "Trusted Players:");
+                } else if(args[0].equals(VALID_ARGS1[2])) {
                     List<String> trustedPlayers = TrustUtil.getTrustedPlayers(p);
-                    for(String s : trustedPlayers) {
-                        sendMsg(p, " ● "+s);
+                    if(trustedPlayers.isEmpty()) {
+                        sendError(p, "Your trusted players list is empty.");
+                    } else {
+                        sendMsg(p, "Trusted Players:");
+                        for (String s : trustedPlayers) {
+                            sendMsg(p, " ● " + s);
+                        }
                     }
-                } else if(args[1].equals(VALID_ARGS1[3])) {
+                } else if(args[0].equals(VALID_ARGS1[3])) {
                     sendMsg(p, "Removed all players on your trusted players list.");
-                    List<String> trustedPlayers = TrustUtil.getTrustedPlayers(p);
-                    for(String s : trustedPlayers) {
-                        TrustUtil.setPlayerTrusted(p, s, false);
-                    }
+                    TrustUtil.resetTrustedPlayers(p);
                 } else {
                     sendError(sender, "Invalid args");
                 }
+            } else {
+                sendError(sender, "Invalid args");
             }
         } else if(!(sender instanceof Player)) {
             sendError(sender, "You must be a player in order to execute this command.");
@@ -64,15 +69,17 @@ public class TrustCommand extends SCCommand {
         List<String> tabComplete = new ArrayList<>();
         if(sender instanceof Player p) {
             if (args.length == 1) {
-                tabComplete.add(Arrays.toString(VALID_ARGS1));
+                tabComplete.addAll(Arrays.asList(VALID_ARGS1));
                 return tabComplete;
             } else if (args.length == 2) {
-                if (args[1].equals(VALID_ARGS1[0])) {
+                if (args[0].equals(VALID_ARGS1[0])) {
                     for (OfflinePlayer opl : Bukkit.getOfflinePlayers()) {
                         tabComplete.add(opl.getName());
                     }
-                } else if (args[1].equals(VALID_ARGS1[1])) {
+                    return tabComplete;
+                } else if (args[0].equals(VALID_ARGS1[1])) {
                     tabComplete.addAll(TrustUtil.getTrustedPlayers(p));
+                    return tabComplete;
                 }
             }
         }

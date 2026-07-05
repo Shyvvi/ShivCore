@@ -7,8 +7,8 @@ import java.util.List;
 
 public class AnimationController {
     List<FrameAnimation> animations;
-    DefaultFrameAnimation defaultAnimation;
-    public AnimationController(List<FrameAnimation> animations, DefaultFrameAnimation defaultAnimation) {
+    FrameAnimation defaultAnimation;
+    public AnimationController(List<FrameAnimation> animations, FrameAnimation defaultAnimation) {
         this.animations = animations;
         this.defaultAnimation = defaultAnimation;
     }
@@ -27,13 +27,13 @@ public class AnimationController {
 
     public static class Builder {
         List<FrameAnimation> animations = new ArrayList<>();
-        DefaultFrameAnimation defaultAnimation = null;
+        FrameAnimation defaultAnimation = null;
         public Builder addAnimation(FrameAnimation pa) {
             animations.add(pa);
             return this;
         }
 
-        public Builder addDefaultAnimation(DefaultFrameAnimation pa) {
+        public Builder addDefaultAnimation(FrameAnimation pa) {
             defaultAnimation = pa;
             return this;
         }
