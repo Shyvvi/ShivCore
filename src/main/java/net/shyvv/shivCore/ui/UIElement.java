@@ -34,7 +34,7 @@ public class UIElement {
 
     public ItemStack getItemStack(Player p) {
         if(this instanceof UIPlayerFeature uip) {
-            return uip.provide(p);
+            return designateItemStackID(uip.provide(p));
         }
         return designateItemStackID(baseItem.clone());
     }
@@ -43,6 +43,15 @@ public class UIElement {
         for(InvUserInterface iui : GUIManager.USER_INTERFACES) {
             if(iui.getID().equals(interfaceID)) {
                 iui.openUI(p);
+                break;
+            }
+        }
+    }
+
+    public void updateItemStack(Player p) {
+        for(InvUserInterface iui : GUIManager.USER_INTERFACES) {
+            if(iui.getInvGUI(p) == p.getOpenInventory().getTopInventory()) {
+                iui.setSlot(this.slot, getItemStack(p), p);
                 break;
             }
         }

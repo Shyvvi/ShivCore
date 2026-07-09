@@ -32,7 +32,7 @@ public class ConfigFile {
         saveConfig();
 
         for(AbstractDefaultConfig dc : defaultConfigList) {
-            ShivCore.log.info("Creating defaultConfig - {}", dc.key);
+            if(!config.contains(dc.key)) ShivCore.log.info("Creating defaultConfig - {}", dc.key);
             dc.initializeDefault(this);
         }
         saveConfig();
@@ -63,7 +63,7 @@ public class ConfigFile {
     }
 
     public void setValue(String key, Object value) {
-        setString(key, value.toString());
+        config.set(key, value);
     }
 
     public String getValue(String key) {

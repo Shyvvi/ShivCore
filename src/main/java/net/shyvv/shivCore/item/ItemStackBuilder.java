@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.shyvv.shivCore.ShivCore;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -52,6 +53,16 @@ public class ItemStackBuilder {
 
         public Builder setHiddenTooltip(boolean value) {
             this.itemMeta.setHideTooltip(value);
+            return this;
+        }
+
+        public Builder setEnchantGlint(boolean value) {
+            this.itemMeta.setEnchantmentGlintOverride(value);
+            return this;
+        }
+
+        public Builder setEnchant(Enchantment enchantment, int level) {
+            this.itemMeta.addEnchant(enchantment, level, true);
             return this;
         }
 

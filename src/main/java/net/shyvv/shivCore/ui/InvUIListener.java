@@ -1,5 +1,6 @@
 package net.shyvv.shivCore.ui;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +18,7 @@ public class InvUIListener implements Listener {
 
     @EventHandler
     private void inventoryInteractEvent(InventoryInteractEvent e) {
+        e.getWhoClicked().sendMessage(Component.text("test"));
         callEvent("onInventoryInteract", e);
     }
 
