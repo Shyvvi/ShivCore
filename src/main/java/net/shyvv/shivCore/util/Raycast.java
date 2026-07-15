@@ -1,6 +1,7 @@
 package net.shyvv.shivCore.util;
 
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.joml.Vector2d;
@@ -48,18 +49,18 @@ public class Raycast {
         for(int x = 0; x<steps; x++) {
             Location loc = MiscUtil.getRelativeLocation(startingLoc, steps*stepDistance, 0, 0);
             ServerUtil.setBoolean("raycastCollided", false);
-            stepEffect.accept(loc, x);
+            if(stepEffect != null) stepEffect.accept(loc, x);
             if(collidesBlocks && blockCollideCondition != null && blockCollideCondition.test(loc.getBlock())) {
                 if(blockPhaseStepAmount > 0) {
                     int i = ServerUtil.incrementInt("raycastPhaseTracking");
                     if(i >= blockPhaseStepAmount) {
                         if(blockCollideEffect != null) blockCollideEffect.accept(loc.getBlock(), x);
-                        ServerUtil.setBoolean("raycasCollided", true);
+                        ServerUtil.setBoolean("raycastCollided", true);
                         break;
                     }
                 } else {
                     if(blockCollideEffect != null) blockCollideEffect.accept(loc.getBlock(), x);
-                    ServerUtil.setBoolean("raycasCollided", true);
+                    ServerUtil.setBoolean("raycastCollided", true);
                     break;
                 }
             }
@@ -73,7 +74,7 @@ public class Raycast {
                     }
                 }
                 if (!collidingEntities.isEmpty() && !piercesEntities) {
-                    ServerUtil.setBoolean("raycasCollided", true);
+                    ServerUtil.setBoolean("raycastCollided", true);
                     break;
                 }
             }

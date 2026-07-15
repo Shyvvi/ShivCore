@@ -54,6 +54,7 @@ public class DamageType {
                     .collidesBlocks(true)
                     .blockCollideCondition(Block::isCollidable)
                     .setBlockPhaseStepAmount(5)
+                    .piercesEntities(true)
                     .entityCollideEffect((entity, integer) -> {
                         if (entity instanceof LivingEntity li) {
                             damage(li, attacker, amount - (damageFalloff * integer));
