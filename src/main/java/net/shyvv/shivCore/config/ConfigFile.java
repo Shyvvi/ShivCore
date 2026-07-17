@@ -46,8 +46,9 @@ public class ConfigFile {
         }
     }
 
-    public void addDefaultConfig(AbstractDefaultConfig defaultConfig) {
+    public <T> T addDefaultConfig(AbstractDefaultConfig<T> defaultConfig) {
         this.defaultConfigList.add(defaultConfig);
+        return defaultConfig.get();
     }
 
     private File getConfigFile() {
