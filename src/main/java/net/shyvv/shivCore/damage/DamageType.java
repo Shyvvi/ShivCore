@@ -49,13 +49,19 @@ public class DamageType {
             victim.setVelocity(victim.getVelocity().add(new Vector(0, knockback.y, 0)));
         }
         if(victim instanceof Player pv) {
-            if(attacker instanceof Player pa && TrustUtil.playerIsTrusted(pa, pv.getName()) && damagesTrustedPlayers) {
-                pv.damage(Float.parseFloat(Configs.SHIVCORE_CONFIG.getValue("trustedPlayersDamageReduction"))*amount);
+            if(blockable && pv.isBlocking()) {
+                EquipmentSlot shieldSlot = pv.getActiveItemHand();
+                pv.damageItemStack(shieldSlot, (int) amount);
+            } else {
+                if (attacker instanceof Player pa && TrustUtil.playerIsTrusted(pa, pv.getName()) && damagesTrustedPlayers) {
+                    pv.damage(Float.parseFloat(Configs.SHIVCORE_CONFIG.getValue("trustedPlayersDamageReduction")) * amount);
+                }
+                pv.damage(amount);
             }
-            pv.damage(amount);
         } else {
             victim.damage(Float.parseFloat(Configs.SHIVCORE_CONFIG.getValue("mobDamageMultiplier"))*amount);
         }
+        if(ignitionTime > 0) victim.setFireTicks(ignitionTime);
     }
 
     public void damageAoERaycasts(@Nullable LivingEntity attacker, Location loc, double amount, int size, double damageFalloff) {
