@@ -20,4 +20,12 @@ public abstract class AbstractDefaultConfig<T> {
         }
         return false;
     }
+
+    /**
+     * returns the default value for the default config, use in tandem with ConfigFile.addDefaultValue
+     * @return
+     */
+    public T get() {
+        return this.defaultValue;
+    }
 }
