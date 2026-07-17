@@ -3,6 +3,7 @@ package net.shyvv.shivCore.damage;
 import net.shyvv.shivCore.constants.Configs;
 import net.shyvv.shivCore.player.trust.TrustUtil;
 import net.shyvv.shivCore.util.EntityUtil;
+import net.shyvv.shivCore.util.MiscUtil;
 import net.shyvv.shivCore.util.Raycast;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -11,6 +12,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 import org.joml.Vector2d;
 
 import javax.annotation.Nullable;
@@ -40,6 +42,11 @@ public class DamageType {
                 EntityUtil.setInt(victim, i, "customDamageType");
                 break;
             }
+        }
+        if(knockback.x != 0 && knockback.y != 0 && attacker != null) {
+            Vector2d kb = MiscUtil.get2DAngleBetweenVectors(attacker.getLocation().toVector(), victim.getLocation().toVector());
+            victim.knockback(knockback.x, kb.x, kb.y);
+            victim.setVelocity(victim.getVelocity().add(new Vector(0, knockback.y, 0)));
         }
         if(victim instanceof Player pv) {
             if(attacker instanceof Player pa && TrustUtil.playerIsTrusted(pa, pv.getName()) && damagesTrustedPlayers) {
