@@ -1,5 +1,6 @@
 package net.shyvv.shivCore.commands;
 
+import net.kyori.adventure.text.Component;
 import net.shyvv.shivCore.entities.AbstractTickingEntity;
 import net.shyvv.shivCore.item.ItemManager;
 import net.shyvv.shivCore.item.SCItem;
@@ -24,8 +25,8 @@ public class GiveItemCommand extends SCCommand {
         if(sender instanceof Player p && p.isOp()) {
             if(args.length >= 1) {
                 for (SCItem sci : ItemManager.CUSTOM_ITEMS) {
-                    if (sci.getItemID().equals(args[0])) {
-                        p.give(sci.getDefaultItemStack());
+                    if (sci.getItemID().equalsIgnoreCase(args[0])) {
+                        p.getInventory().addItem(sci.getDefaultItemStack());
                         return true;
                     }
                 }

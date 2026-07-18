@@ -18,7 +18,6 @@ public class InvUIListener implements Listener {
 
     @EventHandler
     private void inventoryInteractEvent(InventoryInteractEvent e) {
-        e.getWhoClicked().sendMessage(Component.text("test"));
         callEvent("onInventoryInteract", e);
     }
 

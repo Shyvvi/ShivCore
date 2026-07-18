@@ -6,4 +6,7 @@ public class DoubleDefaultConfig extends AbstractDefaultConfig<Double>{
     public DoubleDefaultConfig(String key, Double defaultValue, List<String> comments) {
         super(key, defaultValue, comments);
     }
+    public DoubleDefaultConfig(String key, Double defaultValue) {
+        super(key, defaultValue, List.of(""));
+    }
 }

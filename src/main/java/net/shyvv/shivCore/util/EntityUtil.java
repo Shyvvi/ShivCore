@@ -6,6 +6,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.persistence.ListPersistentDataType;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 
@@ -48,6 +49,20 @@ public class EntityUtil {
             return entity.getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), id), PersistentDataType.INTEGER);
         }
         return 0;
+    }
+
+    public static void storeVector(Entity entity, Vector vector, String vectorKey) {
+        setFloat(entity, (float)vector.getX(), "entityXCoordinate" + vectorKey);
+        setFloat(entity, (float)vector.getY(), "entityYCoordinate" + vectorKey);
+        setFloat(entity, (float)vector.getZ(), "entityZCoordinate" + vectorKey);
+    }
+
+    public static Vector getStoredVector(Entity entity, String vectorKey) {
+        return new Vector(
+                getFloat(entity, "entityXCoordinate"+vectorKey),
+                getFloat(entity, "entityYCoordinate"+vectorKey),
+                getFloat(entity, "entityZCoordinate"+vectorKey)
+        );
     }
 
     /// Set a String List to an entity's PersistentDataContainer

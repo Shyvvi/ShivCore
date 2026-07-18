@@ -6,4 +6,7 @@ public class IntDefaultConfig extends AbstractDefaultConfig<Integer>{
     public IntDefaultConfig(String key, Integer defaultValue, List<String> comments) {
         super(key, defaultValue, comments);
     }
+    public IntDefaultConfig(String key, Integer defaultValue) {
+        super(key, defaultValue, List.of(""));
+    }
 }

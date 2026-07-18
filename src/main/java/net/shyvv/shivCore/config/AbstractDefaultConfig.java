@@ -11,9 +11,14 @@ public abstract class AbstractDefaultConfig<T> {
         this.defaultValue = defaultValue;
         this.comments = comments;
     }
+    public AbstractDefaultConfig(String key, T defaultValue) {
+        this.key = key;
+        this.defaultValue = defaultValue;
+        this.comments = List.of("");
+    }
 
     public boolean initializeDefault(ConfigFile configFile) {
-        if(!configFile.stringExists(key)) {
+        if(!configFile.hasValue(key)) {
             configFile.setValue(key, defaultValue);
             configFile.getConfig().setComments(key, comments);
             return true;

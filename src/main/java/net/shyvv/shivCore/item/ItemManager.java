@@ -1,5 +1,6 @@
 package net.shyvv.shivCore.item;
 
+import net.kyori.adventure.text.Component;
 import net.shyvv.shivCore.ShivCore;
 import net.shyvv.shivCore.constants.Commands;
 
@@ -11,7 +12,6 @@ public class ItemManager {
 
     public static void initialize() {
         ShivCore.getInstance().getServer().getPluginManager().registerEvents(new ItemListener(), ShivCore.getInstance());
-
         List<String> autofillList = new ArrayList<>();
         for(SCItem sci : CUSTOM_ITEMS) {
             autofillList.add(sci.getItemID());

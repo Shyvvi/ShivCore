@@ -4,6 +4,7 @@ import net.shyvv.shivCore.ui.InvUserInterface;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 import org.joml.Vector2d;
@@ -21,6 +22,20 @@ public class MiscUtil {
 
     public static float getPythagoreas(Vector loc1) {
         return (float) Math.sqrt(Math.pow(Math.abs(loc1.getX()), 2) + Math.pow(Math.abs(loc1.getY()), 2) + Math.pow(Math.abs(loc1.getZ()), 2));
+    }
+
+    public static boolean isBehindEntity(Entity entity1, Entity entity2, int yawDifference) {
+        float yawA = entity1.getLocation().getYaw();
+        float yawB = entity2.getLocation().getYaw();
+
+        float yawDiff = Math.abs(yawA - yawB);
+
+        yawDiff = yawDiff % 360;
+        if (yawDiff > 180) {
+            yawDiff = 360 - yawDiff;
+        }
+
+        return yawDiff < yawDifference;
     }
 
     public static Vector2d get2DAngleBetweenVectors(Vector pos1, Vector pos2) {
@@ -64,7 +79,7 @@ public class MiscUtil {
     }
 
     public static Vector getDirectionBetweenVectors(Location loc1, Location loc2) {
-        return loc1.clone().subtract(loc2).toVector();
+        return loc1.clone().subtract(loc2).toVector().normalize();
     }
 
     public static int useTime(int usetime) {
@@ -131,5 +146,33 @@ public class MiscUtil {
 
     public static Location getRelativeLocation(Location loc, double forward, double right, double up) {
         return getRelativeLocation(loc, forward, right, up, 0, 0);
+    }
+
+    public static Vector getRelativeVector(double forward, double right, double up, float setYaw, float setPitch) {
+        double yawRad = Math.toRadians(setYaw);
+        double pitchRad = Math.toRadians(setPitch);
+
+        double cosYaw = Math.cos(yawRad);
+        double sinYaw = Math.sin(yawRad);
+        double cosPitch = Math.cos(pitchRad);
+        double sinPitch = Math.sin(pitchRad);
+
+        double fX = -sinYaw * cosPitch;
+        double fY = -sinPitch;
+        double fZ = cosYaw * cosPitch;
+
+        double rX = cosYaw;
+        double rY = 0;
+        double rZ = sinYaw;
+
+        double uX = -sinYaw * -sinPitch;
+        double uY = cosPitch;
+        double uZ = cosYaw * -sinPitch;
+
+        double x = (forward * fX) + (right * rX) + (up * uX);
+        double y = (forward * fY) + (right * rY) + (up * uY);
+        double z = (forward * fZ) + (right * rZ) + (up * uZ);
+
+        return new Vector(x, y, z);
     }
 }

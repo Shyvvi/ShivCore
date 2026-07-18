@@ -5,6 +5,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -25,11 +26,12 @@ public abstract class SCItem {
     }
 
     public String getItemID() {
-        return defaultItemStack.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), "itemID"), PersistentDataType.STRING);
+        ItemMeta im = defaultItemStack.getItemMeta();
+        return im != null ? im.getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), "itemID"), PersistentDataType.STRING) : "";
     }
 
     public boolean matchesItemID(ItemStack is) {
-        String itemStackID = is.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), "itemID"), PersistentDataType.STRING);
+        String itemStackID = is.getItemMeta() != null ? is.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), "itemID"), PersistentDataType.STRING) : null;
         return itemStackID != null && itemStackID.equals(itemID);
     }
 }

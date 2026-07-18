@@ -18,10 +18,17 @@ public class ServerUtil {
 
     public static void registerCommand(Command cmdClass) {
         try {
-            ShivCore.getInstance().getServer().getCommandMap().register("shivcore", cmdClass);
+            org.bukkit.command.CommandMap commandMap = ShivCore.getInstance().getServer().getCommandMap();
+
+            if (commandMap.getCommand(cmdClass.getName()) != null) {
+                ShivCore.log.warn("Command {} is already registered", cmdClass.getName());
+                return;
+            }
+
+            commandMap.register("shivcore", cmdClass);
             ShivCore.log.info("Registered command {}", cmdClass.getName());
         } catch(Exception e) {
-            ShivCore.log.error("Failed to register command {}", cmdClass.getName());
+            ShivCore.log.error("Failed to register command {}", cmdClass.getName(), e);
         }
     }
 

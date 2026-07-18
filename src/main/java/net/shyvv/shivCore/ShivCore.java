@@ -17,14 +17,13 @@ public final class ShivCore extends JavaPlugin {
     public static void initialize(JavaPlugin plugin) {
         providingPlugin = plugin;
         log = LoggerFactory.getLogger(providingPlugin.getClass());
-
         Configs.initialize();
-        Commands.initialize();
         ConfigManager.initialize();
         GUIManager.initialize();
         ItemManager.initialize();
         PlayerManager.initialize();
         EntityManager.initialize();
+        Commands.initialize();
     }
 
     @Override
