@@ -3,6 +3,7 @@ package net.shyvv.shivCore;
 import net.shyvv.shivCore.config.ConfigManager;
 import net.shyvv.shivCore.constants.Commands;
 import net.shyvv.shivCore.constants.Configs;
+import net.shyvv.shivCore.damage.DamageManager;
 import net.shyvv.shivCore.item.ItemManager;
 import net.shyvv.shivCore.ui.GUIManager;
 import net.shyvv.shivCore.util.EntityManager;
@@ -22,6 +23,7 @@ public final class ShivCore extends JavaPlugin {
         GUIManager.initialize();
         ItemManager.initialize();
         PlayerManager.initialize();
+        DamageManager.initialize();
         EntityManager.initialize();
         Commands.initialize();
     }

@@ -42,12 +42,13 @@ public class DamageType {
     }
 
     public void damage(LivingEntity victim, @Nullable LivingEntity attacker, double amount) {
-        for(int i = 0; i<DamageManager.damageTypeList.size(); i++) {
+        for(int i = 0; i < DamageManager.damageTypeList.size(); i++) {
             if(damageTypeID.equals(DamageManager.damageTypeList.get(i).damageTypeID)) {
-                EntityUtil.setInt(victim, i, "customDamageType");
+                EntityUtil.setInt(victim, i + 1, "customDamageType");
                 break;
             }
         }
+
         if((knockback.x != 0 || knockback.y != 0) && victim.getNoDamageTicks() <= 0) {
             if(attacker != null) {
                 Vector kb = MiscUtil.getDirectionBetweenVectors(victim.getLocation(), attacker.getLocation());
@@ -56,6 +57,7 @@ public class DamageType {
             }
         }
         if(consumer != null) consumer.accept(victim, attacker);
+
         if(victim instanceof Player pv) {
             if(blockable && pv.isBlocking()) {
                 EquipmentSlot shieldSlot = pv.getActiveItemHand();
@@ -67,10 +69,17 @@ public class DamageType {
                 pv.damage(amount);
             }
         } else {
-            victim.damage(Float.parseFloat(Configs.SHIVCORE_CONFIG.getString("mobDamageMultiplier"))*amount);
+            victim.damage(Float.parseFloat(Configs.SHIVCORE_CONFIG.getString("mobDamageMultiplier")) * amount);
         }
+
         if(ignitionTime > 0) victim.setFireTicks(ignitionTime);
         if(ignoresIFrames) ShivCore.getInstance().getServer().getScheduler().runTaskLater(ShivCore.getInstance(), () -> victim.setNoDamageTicks(0), 1);
+
+        ShivCore.getInstance().getServer().getScheduler().runTaskLater(ShivCore.getInstance(), () -> {
+            if (victim.isValid()) {
+                EntityUtil.setInt(victim, 0, "customDamageType");
+            }
+        }, 1);
     }
 
     public void damageAoERaycasts(@Nullable LivingEntity attacker, Location loc, double amount, int size, double damageFalloff) {
