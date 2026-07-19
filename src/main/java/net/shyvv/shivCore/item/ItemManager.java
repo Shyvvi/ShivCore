@@ -11,7 +11,6 @@ public class ItemManager {
     public static List<SCItem> CUSTOM_ITEMS = new ArrayList<>();
 
     public static void initialize() {
-        ShivCore.getInstance().getServer().getPluginManager().registerEvents(new ItemListener(), ShivCore.getInstance());
         List<String> autofillList = new ArrayList<>();
         for(SCItem sci : CUSTOM_ITEMS) {
             autofillList.add(sci.getItemID());
