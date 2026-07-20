@@ -42,6 +42,9 @@ public class DamageType {
     }
 
     public void damage(LivingEntity victim, @Nullable LivingEntity attacker, double amount) {
+        // I know that this is a "bad practice" but I didn't wanna put everything into a conditional statement and introduce conflicting variables
+        if(victim instanceof Player p && attacker instanceof Player pa && TrustUtil.playerIsTrusted(pa, p.getName()) && !damagesTrustedPlayers) return;
+
         for(int i = 0; i < DamageManager.damageTypeList.size(); i++) {
             if(damageTypeID.equals(DamageManager.damageTypeList.get(i).damageTypeID)) {
                 EntityUtil.setInt(victim, i + 1, "customDamageType");

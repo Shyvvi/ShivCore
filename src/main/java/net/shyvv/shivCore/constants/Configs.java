@@ -11,7 +11,7 @@ import java.util.List;
 public class Configs {
     public static final ConfigFile SHIVCORE_CONFIG = new ConfigFile("shivcore", ShivCore.getInstance(),
             new FloatDefaultConfig("trustedPlayersDamageReduction", 0.5f, List.of("The percentage of reduced damage trusted players take.")),
-            new FloatDefaultConfig("mobDamageMultiplier", 0.5f, List.of("The percentage of damage which is dealt to mobs."))
+            new FloatDefaultConfig("mobDamageMultiplier", 2f, List.of("The percentage of damage which is dealt to mobs."))
     );
 
     public static void initialize() {}

@@ -16,17 +16,18 @@ import org.jetbrains.annotations.ApiStatus;
 public abstract class SCItem implements Listener {
     ItemStack defaultItemStack;
     String itemID;
-    String[][] recipeMatrix; // ADDED: Field to store the custom recipe
+    String[][] recipeMatrix;
 
     public SCItem(ItemStack defaultItemStack, String itemID) {
         this.defaultItemStack = ItemStackBuilder.setItemStackData(defaultItemStack, "itemID", PersistentDataType.STRING, itemID);
         this.itemID = itemID;
         ItemManager.CUSTOM_ITEMS.add(this);
+        System.out.println("Registering item "+itemID);
         ShivCore.getInstance().getServer().getPluginManager().registerEvents(this, ShivCore.getInstance());
     }
 
     public SCItem(ItemStack defaultItemStack, String itemID, String[][] recipeMatrix) {
-        this(defaultItemStack, itemID); // Calls the primary constructor to handle basic setup and event registration
+        this(defaultItemStack, itemID);
         this.recipeMatrix = recipeMatrix;
     }
 
@@ -85,12 +86,6 @@ public abstract class SCItem implements Listener {
         }
     }
 
-    @EventHandler
-    public abstract void onPlayerInteract(PlayerInteractEvent e);
-
-    @EventHandler
-    public abstract void onPlayerEntityInteract(PlayerInteractEntityEvent e);
-
     public ItemStack getDefaultItemStack() {
         return defaultItemStack;
     }
@@ -101,7 +96,10 @@ public abstract class SCItem implements Listener {
     }
 
     public boolean matchesItemID(ItemStack is) {
-        String itemStackID = is.getItemMeta() != null ? is.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), "itemID"), PersistentDataType.STRING) : null;
-        return itemStackID != null && itemStackID.equals(itemID);
+        if(is != null) {
+            String itemStackID = is.getItemMeta() != null ? is.getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), "itemID"), PersistentDataType.STRING) : null;
+            return itemStackID != null && itemStackID.equals(itemID);
+        }
+        return false;
     }
 }
