@@ -14,9 +14,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2d;
 
-import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
