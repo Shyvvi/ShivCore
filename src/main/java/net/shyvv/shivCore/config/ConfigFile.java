@@ -120,6 +120,11 @@ public class ConfigFile {
         this.config.set(key, value);
     }
 
+    public void setInt(String key, int value) {
+        this.ensureLoaded();
+        this.config.set(key, value);
+    }
+
     public void setValue(String key, Object value) {
         this.ensureLoaded();
         this.config.set(key, value);
@@ -138,6 +143,11 @@ public class ConfigFile {
     public int getInt(String key) {
         this.ensureLoaded();
         return this.config.getInt(key);
+    }
+
+    public List<Integer> getIntegerList(String key) {
+        this.ensureLoaded();
+        return this.config.getIntegerList(key);
     }
 
     public String getString(String key) {
