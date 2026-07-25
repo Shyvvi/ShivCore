@@ -3,6 +3,7 @@ package net.shyvv.shivCore.ui;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class UIRedirect extends UIElement implements UIClickable {
@@ -10,6 +11,11 @@ public class UIRedirect extends UIElement implements UIClickable {
     public UIRedirect(ItemStack itemStack, int slot, String itemID, String interfaceID) {
         super(itemStack, slot, itemID);
         this.interfaceID = interfaceID;
+    }
+
+    @Override
+    public boolean clickConditions(InventoryClickEvent e) {
+        return true;
     }
 
     @Override

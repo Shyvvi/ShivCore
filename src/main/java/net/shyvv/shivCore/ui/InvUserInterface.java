@@ -72,7 +72,7 @@ public class InvUserInterface {
                     for (UIElement uie : baseUIElements) {
                         if (getItemID(clicked).equals(uie.getID(p))) {
                             if(uie instanceof UIClickable uir) {
-                                uir.onClick(p);
+                                if(uir.clickConditions(e)) uir.onClick(p);
                                 e.setCancelled(true);
                             } else if(uie instanceof UICancelsInteraction) {
                                 e.setCancelled(true);
