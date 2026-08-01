@@ -1,5 +1,6 @@
 package net.shyvv.shivCore.util;
 
+import net.shyvv.shivCore.ui.InvUserInterface;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -10,12 +11,7 @@ import org.joml.Vector2d;
 
 import java.util.Random;
 
-
-import org.bukkit.*;
-import org.jetbrains.annotations.Nullable;
-
 public class MiscUtil {
-
     public static boolean isBetween(int x, int lower, int upper) {
         return lower <= x && x <= upper;
     }
@@ -61,11 +57,11 @@ public class MiscUtil {
     }
 
     public static String getNegativeSpaces(int value) {
-        StringBuilder ns = new StringBuilder();
-        for (int i = 0; i < value; i++) {
-            ns.append("ꌕ");
+        String ns = "";
+        for(int i = 0; i < value; i++) {
+            ns += "ꌕ";
         }
-        return ns.toString();
+        return ns;
     }
 
     public static Location raycastBlockLocation(Location startLocation, int steps, double stepDistance) {
@@ -107,7 +103,7 @@ public class MiscUtil {
         return Math.abs(value) >= EPSILON;
     }
     public static Location getRelativeLocation(Location loc, double forward, double right, double up, float setYaw, float setPitch) {
-        Location ret = loc.clone(); // FIX: clone so we never mutate the caller's original Location
+        Location ret = loc;
 
         if(setPitch != 0) {
             ret = new Location(ret.getWorld(), ret.getX(), ret.getY(), ret.getZ(), ret.getYaw(), setPitch);
@@ -165,66 +161,18 @@ public class MiscUtil {
         double fY = -sinPitch;
         double fZ = cosYaw * cosPitch;
 
-        // FIX: sign was inverted relative to the right-vector convention
-        // established by getRelativeLocation's cross-product branch (right = west at yaw 0).
-        double rX = -cosYaw;
+        double rX = cosYaw;
         double rY = 0;
-        double rZ = -sinYaw;
+        double rZ = sinYaw;
 
-        double uX = -sinYaw * sinPitch;
+        double uX = -sinYaw * -sinPitch;
         double uY = cosPitch;
-        double uZ = cosYaw * sinPitch;
+        double uZ = cosYaw * -sinPitch;
 
         double x = (forward * fX) + (right * rX) + (up * uX);
         double y = (forward * fY) + (right * rY) + (up * uY);
         double z = (forward * fZ) + (right * rZ) + (up * uZ);
 
         return new Vector(x, y, z);
-    }
-
-    public static void spawnParticleCircle(Location origin, double size, double speed, @Nullable Vector2d angle, Particle particle, boolean forced) {
-        Location center = origin.clone();
-        if (angle != null) {
-            center.setYaw((float) angle.x);
-            center.setPitch((float) angle.y);
-        }
-        createCircle(center, center.getDirection(), size, speed, particle, forced);
-    }
-
-    public static void spawnParticleCircle(Location origin, double size, double speed, Vector direction, Particle particle, boolean forced) {
-        createCircle(origin, direction, size, speed, particle, forced);
-    }
-
-    private static void createCircle(Location center, Vector forward, double size, double speed, Particle particle, boolean forced) {
-        World world = center.getWorld();
-        if (world == null) return;
-
-        forward = forward.clone().normalize();
-
-        Vector worldUp = Math.abs(forward.getY()) > 0.999 ? new Vector(1, 0, 0) : new Vector(0, 1, 0);
-        Vector right = forward.clone().crossProduct(worldUp).normalize();
-        Vector up = right.clone().crossProduct(forward).normalize();
-
-        for (int degrees = 0; degrees < 360; degrees += 10) {
-            double cos = Math.cos(degrees * Math.PI / 180.0);
-            double sin = Math.sin(degrees * Math.PI / 180.0);
-
-            Vector point = right.clone().multiply(cos * size).add(up.clone().multiply(sin * size));
-
-            Location particleLoc = center.clone().add(point);
-            Vector particleDir = point.clone().normalize().multiply(speed);
-
-            world.spawnParticle(particle, particleLoc, 0,
-                    particleDir.getX(), particleDir.getY(), particleDir.getZ(), Math.abs(speed), null, forced);
-        }
-    }
-
-    public static void attemptDisableShield(Player p, int time) {
-        if(p.isBlocking()) {
-            p.playSound(p.getLocation(), Sound.ITEM_SHIELD_BREAK, 1, 1);
-            p.playSound(p.getLocation(), Sound.ITEM_SHIELD_BLOCK, 1, 1);
-            p.completeUsingActiveItem();
-            p.setCooldown(Material.SHIELD, time);
-        }
     }
 }

@@ -169,6 +169,7 @@ public class InvUserInterface {
             for (UIElement uie : baseUIElements) {
                 if (uie.getID(p).equals(elementID)) {
                     inv.setItem(uie.slot, uie.getItemStack(p));
+                    p.updateInventory();
                     break;
                 }
             }

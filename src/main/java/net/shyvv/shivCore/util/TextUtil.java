@@ -13,18 +13,36 @@ public class TextUtil {
 
     public static List<TextComponent> getFitTextComponent(String string, int breakpoint) {
         List<TextComponent> ltc = new ArrayList<>();
-        char[] text = string.toCharArray();
-        String s = "";
-        int j = 0;
-        for(int i = 0; i < text.length; i++) {
-            j++;
-            s += text[i];
-            if(j >= breakpoint || i == text.length-1) {
-                ltc.add(Component.text(s));
-                s = "";
-                j = 0;
+        StringBuilder line = new StringBuilder();
+        StringBuilder word = new StringBuilder();
+
+        for (int i = 0; i < string.length(); i++) {
+            char c = string.charAt(i);
+
+            if (c == ' ') {
+                if (line.length() + word.length() + (!line.isEmpty() ? 1 : 0) > breakpoint) {
+                    ltc.add(Component.text(line.toString()));
+                    line = new StringBuilder();
+                }
+                if (!line.isEmpty()) line.append(' ');
+                line.append(word);
+                word = new StringBuilder();
+            } else {
+                word.append(c);
             }
         }
+
+        if (line.length() + word.length() + (!line.isEmpty() ? 1 : 0) > breakpoint) {
+            ltc.add(Component.text(line.toString()));
+            line = new StringBuilder();
+        }
+        if (!line.isEmpty()) line.append(' ');
+        line.append(word);
+
+        if (!line.isEmpty()) {
+            ltc.add(Component.text(line.toString()));
+        }
+
         return ltc;
     }
 
@@ -50,5 +68,17 @@ public class TextUtil {
 
     public static List<TextComponent> colorComponentList(List<TextComponent> ltc, TextColor color) {
         return colorComponentList(ltc, color, new IntRange(0, ltc.size()));
+    }
+
+    public static List<TextComponent> indexComponentList(List<TextComponent> ltc, int indexAmount) {
+        List<TextComponent> nltc = new ArrayList<>();
+        TextComponent index = Component.text("");
+        for(int i = 1; i<=indexAmount; i++) {
+            index = index.append(Component.text(" "));
+        }
+        for(int i = 0; i < ltc.size(); i++) {
+            ltc.set(i, index.append(ltc.get(i)));
+        }
+        return ltc;
     }
 }
