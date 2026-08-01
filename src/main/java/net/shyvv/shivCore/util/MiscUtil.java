@@ -1,17 +1,17 @@
 package net.shyvv.shivCore.util;
 
 import net.shyvv.shivCore.ui.InvUserInterface;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2d;
 
 import java.util.Random;
 
 public class MiscUtil {
+
     public static boolean isBetween(int x, int lower, int upper) {
         return lower <= x && x <= upper;
     }
@@ -174,5 +174,62 @@ public class MiscUtil {
         double z = (forward * fZ) + (right * rZ) + (up * uZ);
 
         return new Vector(x, y, z);
+    }
+
+    public static void spawnParticleCircle(Location origin, double size, double speed, @Nullable Vector2d angle, Particle particle, boolean forced) {
+        World world = origin.getWorld();
+        if (world == null) return;
+
+        Location center = origin.clone();
+        if (angle != null) {
+            center.setYaw((float) angle.x);
+            center.setPitch((float) angle.y);
+        }
+
+        Vector forward = center.getDirection();
+
+        Vector worldUp = Math.abs(forward.getY()) > 0.999 ? new Vector(1, 0, 0) : new Vector(0, 1, 0);
+        Vector right = forward.clone().crossProduct(worldUp).normalize();
+        Vector up = right.clone().crossProduct(forward).normalize();
+
+        for (int degrees = 0; degrees < 360; degrees += 10) {
+            double cos = Math.cos(degrees * Math.PI / 180.0);
+            double sin = Math.sin(degrees * Math.PI / 180.0);
+
+            Vector point = right.clone().multiply(cos * size).add(up.clone().multiply(sin * size));
+
+            Location particleLoc = center.clone().add(point);
+            Vector direction = point.clone().normalize().multiply(speed);
+
+            world.spawnParticle(particle, particleLoc, 0,
+                    direction.getX(), direction.getY(), direction.getZ(), Math.abs(speed), null, forced);
+        }
+    }
+
+    private static Vector rotateVector(Vector v, int yawDegrees, int pitchDegrees) {
+        int yaw = ((yawDegrees % 360) + 360) % 360;
+        int pitch = ((pitchDegrees % 360) + 360) % 360;
+
+        double cosYaw = Math.cos(yaw * Math.PI / 180.0);
+        double sinYaw = Math.sin(yaw * Math.PI / 180.0);
+        double x1 = v.getX() * cosYaw - v.getZ() * sinYaw;
+        double z1 = v.getX() * sinYaw + v.getZ() * cosYaw;
+        double y1 = v.getY();
+
+        double cosPitch = Math.cos(pitch * Math.PI / 180.0);
+        double sinPitch = Math.sin(pitch * Math.PI / 180.0);
+        double y2 = y1 * cosPitch - z1 * sinPitch;
+        double z2 = y1 * sinPitch + z1 * cosPitch;
+
+        return new Vector(x1, y2, z2);
+    }
+
+    public static void attemptDisableShield(Player p, int time) {
+        if(p.isBlocking()) {
+            p.playSound(p.getLocation(), Sound.ITEM_SHIELD_BREAK, 1, 1);
+            p.playSound(p.getLocation(), Sound.ITEM_SHIELD_BLOCK, 1, 1);
+            p.completeUsingActiveItem();
+            p.setCooldown(Material.SHIELD, time);
+        }
     }
 }

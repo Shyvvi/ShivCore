@@ -56,6 +56,10 @@ public class UIElement {
         }
     }
 
+    public String getItemID() {
+        return this.itemID;
+    }
+
     public String getID(Player p) {
         return getItemStack(p).getItemMeta().getPersistentDataContainer().get(new NamespacedKey(ShivCore.getInstance(), "itemID"), PersistentDataType.STRING);
     }

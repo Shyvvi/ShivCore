@@ -8,6 +8,7 @@ import net.shyvv.shivCore.item.ItemManager;
 import net.shyvv.shivCore.ui.GUIManager;
 import net.shyvv.shivCore.util.EntityManager;
 import net.shyvv.shivCore.player.PlayerManager;
+import net.shyvv.shivCore.util.EphemeralEntityUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,8 @@ public final class ShivCore extends JavaPlugin {
         DamageManager.initialize();
         EntityManager.initialize();
         Commands.initialize();
+        ShivCore.getInstance().getServer().getPluginManager().registerEvents(new EphemeralEntityUtil(), ShivCore.getInstance());
+
     }
 
     @Override
