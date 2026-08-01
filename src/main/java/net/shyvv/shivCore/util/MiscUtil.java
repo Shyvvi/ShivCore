@@ -1,6 +1,5 @@
 package net.shyvv.shivCore.util;
 
-import net.shyvv.shivCore.ui.InvUserInterface;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -177,16 +176,23 @@ public class MiscUtil {
     }
 
     public static void spawnParticleCircle(Location origin, double size, double speed, @Nullable Vector2d angle, Particle particle, boolean forced) {
-        World world = origin.getWorld();
-        if (world == null) return;
-
         Location center = origin.clone();
         if (angle != null) {
             center.setYaw((float) angle.x);
             center.setPitch((float) angle.y);
         }
+        createCircle(center, center.getDirection(), size, speed, particle, forced);
+    }
 
-        Vector forward = center.getDirection();
+    public static void spawnParticleCircle(Location origin, double size, double speed, Vector direction, Particle particle, boolean forced) {
+        createCircle(origin, direction, size, speed, particle, forced);
+    }
+
+    private static void createCircle(Location center, Vector forward, double size, double speed, Particle particle, boolean forced) {
+        World world = center.getWorld();
+        if (world == null) return;
+
+        forward = forward.clone().normalize();
 
         Vector worldUp = Math.abs(forward.getY()) > 0.999 ? new Vector(1, 0, 0) : new Vector(0, 1, 0);
         Vector right = forward.clone().crossProduct(worldUp).normalize();
@@ -199,29 +205,11 @@ public class MiscUtil {
             Vector point = right.clone().multiply(cos * size).add(up.clone().multiply(sin * size));
 
             Location particleLoc = center.clone().add(point);
-            Vector direction = point.clone().normalize().multiply(speed);
+            Vector particleDir = point.clone().normalize().multiply(speed);
 
             world.spawnParticle(particle, particleLoc, 0,
-                    direction.getX(), direction.getY(), direction.getZ(), Math.abs(speed), null, forced);
+                    particleDir.getX(), particleDir.getY(), particleDir.getZ(), Math.abs(speed), null, forced);
         }
-    }
-
-    private static Vector rotateVector(Vector v, int yawDegrees, int pitchDegrees) {
-        int yaw = ((yawDegrees % 360) + 360) % 360;
-        int pitch = ((pitchDegrees % 360) + 360) % 360;
-
-        double cosYaw = Math.cos(yaw * Math.PI / 180.0);
-        double sinYaw = Math.sin(yaw * Math.PI / 180.0);
-        double x1 = v.getX() * cosYaw - v.getZ() * sinYaw;
-        double z1 = v.getX() * sinYaw + v.getZ() * cosYaw;
-        double y1 = v.getY();
-
-        double cosPitch = Math.cos(pitch * Math.PI / 180.0);
-        double sinPitch = Math.sin(pitch * Math.PI / 180.0);
-        double y2 = y1 * cosPitch - z1 * sinPitch;
-        double z2 = y1 * sinPitch + z1 * cosPitch;
-
-        return new Vector(x1, y2, z2);
     }
 
     public static void attemptDisableShield(Player p, int time) {
