@@ -12,6 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
-public abstract class AbstractTickingEntity {
+public abstract class AbstractTickingEntity implements Listener {
     final EntityType baseEntity;
     final String entityID;
     BehaviorController behaviorController = null;
@@ -32,13 +33,13 @@ public abstract class AbstractTickingEntity {
         this.entityID = entityID;
         this.baseEntity = baseEntity;
         this.behaviorController = behaviorController;
+        ShivCore.getInstance().getServer().getPluginManager().registerEvents(this, ShivCore.getInstance());
+        EntityManager.TICKING_ENTITY_LOOKUP.put(entityID, this);
         EntityManager.TICKING_ENTITIES.add(this);
     }
 
     public AbstractTickingEntity(EntityType baseEntity, String entityID) {
-        this.entityID = entityID;
-        this.baseEntity = baseEntity;
-        EntityManager.TICKING_ENTITIES.add(this);
+        this(baseEntity, entityID, null);
     }
 
     public abstract void tick(Entity entity);
@@ -48,8 +49,8 @@ public abstract class AbstractTickingEntity {
         return this.baseEntity;
     }
 
-    public NamespacedKey getEntityID() {
-        return new NamespacedKey(ShivCore.getInstance(), this.entityID);
+    public String getEntityID() {
+        return this.entityID;
     }
 
     public BehaviorController getBehaviorController() {
@@ -65,7 +66,7 @@ public abstract class AbstractTickingEntity {
     }
 
     public boolean isOwner(Entity entity, Entity owner) {
-        if(entity.getPersistentDataContainer().has(ownerKey)) {
+        if(entity != null && owner != null && entity.getPersistentDataContainer().has(ownerKey)) {
             return owner.getUniqueId().toString().equals(entity.getPersistentDataContainer().get(ownerKey, PersistentDataType.STRING));
         }
         return false;
@@ -127,9 +128,9 @@ public abstract class AbstractTickingEntity {
         assert world != null;
         Entity entity = world.spawnEntity(loc, getBaseEntity());
         spawnArgs(entity);
-        entity.getPersistentDataContainer().set(EntityManager.TICKING_KEY, PersistentDataType.BOOLEAN, true);
-        entity.getPersistentDataContainer().set(getEntityID(), PersistentDataType.BOOLEAN, true);
-        EntityManager.beginTickingEntity(entity);
+        EntityUtil.setBoolean(entity, true, EntityManager.TICKING_KEY);
+        EntityUtil.setString(entity, getEntityID(), "ENTITY_IDENTIFICATION");
+        EntityManager.beginTickingEntity(entity, this);
         return entity;
     }
 

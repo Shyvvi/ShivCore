@@ -88,13 +88,13 @@ public class DamageType {
     public void damageAoERaycasts(@Nullable LivingEntity attacker, Location loc, double amount, int size, double damageFalloff) {
         for(Entity e : loc.getNearbyLivingEntities(size, size, size)) {
             if(attacker != null && e.getUniqueId().equals(attacker.getUniqueId())) continue;
-            Raycast rc = new Raycast.Builder(size*10, 0.01)
+            Raycast rc = new Raycast.Builder(size*10, 0.1)
                     .collidesEntities(true)
                     .collidesBlocks(true)
                     .blockCollideCondition(Block::isCollidable)
                     .setBlockPhaseStepAmount(5)
                     .piercesEntities(true)
-                    .entityCollideEffect((entity, integer) -> {
+                    .entityCollideEffect((_, entity, integer) -> {
                         if (entity instanceof LivingEntity li) {
                             damage(li, attacker, amount - (damageFalloff * integer));
                         }

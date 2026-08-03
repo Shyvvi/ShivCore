@@ -1,12 +1,11 @@
 package net.shyvv.shivCore.util;
 
 import net.shyvv.shivCore.ui.InvUserInterface;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2d;
 
 import java.util.Random;
@@ -103,7 +102,7 @@ public class MiscUtil {
         return Math.abs(value) >= EPSILON;
     }
     public static Location getRelativeLocation(Location loc, double forward, double right, double up, float setYaw, float setPitch) {
-        Location ret = loc;
+        Location ret = loc.clone();
 
         if(setPitch != 0) {
             ret = new Location(ret.getWorld(), ret.getX(), ret.getY(), ret.getZ(), ret.getYaw(), setPitch);
@@ -161,18 +160,85 @@ public class MiscUtil {
         double fY = -sinPitch;
         double fZ = cosYaw * cosPitch;
 
-        double rX = cosYaw;
+        double rX = -cosYaw;
         double rY = 0;
-        double rZ = sinYaw;
+        double rZ = -sinYaw;
 
-        double uX = -sinYaw * -sinPitch;
+        double uX = -sinYaw * sinPitch;
         double uY = cosPitch;
-        double uZ = cosYaw * -sinPitch;
+        double uZ = cosYaw * sinPitch;
 
         double x = (forward * fX) + (right * rX) + (up * uX);
         double y = (forward * fY) + (right * rY) + (up * uY);
         double z = (forward * fZ) + (right * rZ) + (up * uZ);
 
         return new Vector(x, y, z);
+    }
+
+    public static void spawnParticleCircle(Location origin, double size, double speed, @Nullable Vector2d angle, Particle particle, Object particleData, boolean forced) {
+        Location center = origin.clone();
+
+        if (angle != null) {
+            center.setYaw((float) angle.x);
+            center.setPitch((float) angle.y);
+        }
+
+        createCircle(center, center.getDirection(), size, speed, particle, particleData, forced);
+    }
+
+    public static void spawnParticleCircle(Location origin, double size, double speed, Vector direction, Particle particle, Object particleData, boolean forced) {
+        createCircle(origin, direction, size, speed, particle, particleData, forced);
+    }
+
+    private static void createCircle(Location center, Vector forward, double size, double speed, Particle particle, Object particleData, boolean forced) {
+        World world = center.getWorld();
+
+        if (world != null) {
+            forward = forward.clone().normalize();
+
+            Vector worldUp = Math.abs(forward.getY()) > 0.999 ? new Vector(1, 0, 0) : new Vector(0, 1, 0);
+            Vector right = forward.clone().crossProduct(worldUp).normalize();
+            Vector up = right.clone().crossProduct(forward).normalize();
+
+            for (int degrees = 0; degrees < 360; degrees += 10) {
+
+                double cos = Math.cos(Math.toRadians(degrees));
+                double sin = Math.sin(Math.toRadians(degrees));
+
+                Vector point = right.clone().multiply(cos * size).add(up.clone().multiply(sin * size));
+
+                Location particleLoc = center.clone().add(point);
+
+                Vector particleDir = point.clone().normalize().multiply(speed);
+
+                world.spawnParticle(particle, particleLoc, 0, particleDir.getX(), particleDir.getY(), particleDir.getZ(), Math.abs(speed), particleData, forced);
+            }
+        }
+    }
+
+    public static Location getLowestLocation(Location loc, int blocks) {
+        Location check = loc.clone();
+        for (int i = 0; i < blocks*10; i++) {
+            Location below = check.clone().add(0, -0.1, 0);
+            if (below.getBlock().isCollidable()) {
+                return check;
+            }
+            check = below;
+        }
+
+        return null;
+    }
+
+    public static Location getLowestLocation(Location loc) {
+        return getLowestLocation(loc, 10);
+    }
+
+    public static void attemptDisableShield(Player p, int time) {
+        if(p.isBlocking()) {
+            p.getWorld().playSound(p.getLocation(), Sound.ITEM_SHIELD_BREAK, 1, 1);
+            p.getWorld().playSound(p.getLocation(), Sound.ITEM_SHIELD_BLOCK, 1, 1);
+            p.completeUsingActiveItem();
+            p.setCooldown(Material.SHIELD, time);
+        }
     }
 }

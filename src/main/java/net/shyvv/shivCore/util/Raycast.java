@@ -1,5 +1,6 @@
 package net.shyvv.shivCore.util;
 
+import org.apache.logging.log4j.util.TriConsumer;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
@@ -21,10 +22,10 @@ public class Raycast {
     int steps;
     Predicate<Block> blockCollideCondition;
     Predicate<Entity> exemptEntityCondition;
-    BiConsumer<Entity, Integer> entityCollideEffect;
+    TriConsumer<Location, Entity, Integer> entityCollideEffect;
     BiConsumer<Location, Integer> raycastEndEffect;
     BiConsumer<Location, Integer> stepEffect;
-    BiConsumer<Block, Integer> blockCollideEffect;
+    TriConsumer<Location, Block, Integer> blockCollideEffect;
 
     private Raycast(Builder builder) {
         this.collidesBlocks = builder.collidesBlocks;
@@ -60,12 +61,12 @@ public class Raycast {
                 if (blockPhaseStepAmount > 0) {
                     phaseTracking++;
                     if (phaseTracking >= blockPhaseStepAmount) {
-                        if (blockCollideEffect != null) blockCollideEffect.accept(loc.getBlock(), x);
+                        if (blockCollideEffect != null) blockCollideEffect.accept(loc, loc.getBlock(), x);
                         collided = true;
                         break;
                     }
                 } else {
-                    if (blockCollideEffect != null) blockCollideEffect.accept(loc.getBlock(), x);
+                    if (blockCollideEffect != null) blockCollideEffect.accept(loc, loc.getBlock(), x);
                     collided = true;
                     break;
                 }
@@ -76,7 +77,7 @@ public class Raycast {
                 if (exemptEntityCondition != null) collidingEntities.removeIf(exemptEntityCondition);
                 if (entityCollideEffect != null) {
                     for (Entity ce : collidingEntities) {
-                        entityCollideEffect.accept(ce, x);
+                        entityCollideEffect.accept(loc, ce, x);
                     }
                 }
                 if (!collidingEntities.isEmpty() && !piercesEntities) {
@@ -112,10 +113,10 @@ public class Raycast {
         int steps;
         Predicate<Entity> exemptEntityCondition = null;
         Predicate<Block> blockCollideCondition = null;
-        BiConsumer<Entity, Integer> entityCollideEffect = null;
+        TriConsumer<Location, Entity, Integer> entityCollideEffect = null;
         BiConsumer<Location, Integer> stepEffect = null;
         BiConsumer<Location, Integer> raycastEndEffect = null;
-        BiConsumer<Block, Integer> blockCollideEffect = null;
+        TriConsumer<Location, Block, Integer> blockCollideEffect = null;
 
         public Builder(int steps, double stepDistance) {
             this.steps = steps;
@@ -157,7 +158,7 @@ public class Raycast {
             return this;
         }
 
-        public Builder blockCollideEffect(BiConsumer<Block, Integer> consumer) {
+        public Builder blockCollideEffect(TriConsumer<Location, Block, Integer> consumer) {
             this.blockCollideEffect = consumer;
             return this;
         }
@@ -167,7 +168,7 @@ public class Raycast {
             return this;
         }
 
-        public Builder entityCollideEffect(BiConsumer<Entity, Integer> consumer) {
+        public Builder entityCollideEffect(TriConsumer<Location, Entity, Integer> consumer) {
             this.entityCollideEffect = consumer;
             return this;
         }

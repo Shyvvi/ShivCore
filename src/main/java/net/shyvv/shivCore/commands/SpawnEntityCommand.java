@@ -22,7 +22,7 @@ public class SpawnEntityCommand extends SCCommand {
         if(sender instanceof Player p && p.isOp()) {
             if(args.length >= 1) {
                 for (AbstractTickingEntity ate : EntityManager.TICKING_ENTITIES) {
-                    if (ate.getEntityID().asString().equals(args[0])) {
+                    if (ate.getEntityID().equals(args[0])) {
                         ate.spawn(p.getEyeLocation());
                         return true;
                     }
@@ -45,7 +45,7 @@ public class SpawnEntityCommand extends SCCommand {
         List<String> tabComplete = new ArrayList<>();
         if(args.length == 1) {
             for(AbstractTickingEntity ate : EntityManager.TICKING_ENTITIES) {
-               tabComplete.add(ate.getEntityID().asString());
+               tabComplete.add(ate.getEntityID());
             }
             return tabComplete;
         }
