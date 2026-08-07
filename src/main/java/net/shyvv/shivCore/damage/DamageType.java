@@ -17,6 +17,8 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2d;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
@@ -44,6 +46,7 @@ public class DamageType {
     public void damage(LivingEntity victim, @Nullable LivingEntity attacker, double amount) {
         // I know that this is a "bad practice" but I didn't wanna put everything into a conditional statement and introduce conflicting variables
         if(victim instanceof Player p && attacker instanceof Player pa && TrustUtil.playerIsTrusted(pa, p.getName()) && !damagesTrustedPlayers) return;
+        if(ignoresIFrames) victim.setNoDamageTicks(0);
 
         for(int i = 0; i < DamageManager.damageTypeList.size(); i++) {
             if(damageTypeID.equals(DamageManager.damageTypeList.get(i).damageTypeID)) {
@@ -55,8 +58,31 @@ public class DamageType {
         if((knockback.x != 0 || knockback.y != 0) && victim.getNoDamageTicks() <= 0) {
             if(attacker != null) {
                 Vector kb = MiscUtil.getDirectionBetweenVectors(victim.getLocation(), attacker.getLocation());
-                victim.setVelocity(victim.getVelocity().add(kb.multiply(knockback.x)));
-                victim.setVelocity(victim.getVelocity().add(new Vector(0, knockback.y, 0)));
+                Vector velocity = victim.getVelocity().add(kb.multiply(knockback.x));
+                velocity.setY(velocity.getY() + knockback.y);
+
+                double maxHorizontal = Math.abs(knockback.x * 2);
+                double maxVertical = Math.abs(knockback.y * 2);
+
+                if(velocity.getX() > maxHorizontal) {
+                    velocity.setX(maxHorizontal);
+                } else if(velocity.getX() < -maxHorizontal) {
+                    velocity.setX(-maxHorizontal);
+                }
+
+                if(velocity.getZ() > maxHorizontal) {
+                    velocity.setZ(maxHorizontal);
+                } else if(velocity.getZ() < -maxHorizontal) {
+                    velocity.setZ(-maxHorizontal);
+                }
+
+                if(velocity.getY() > maxVertical) {
+                    velocity.setY(maxVertical);
+                } else if(velocity.getY() < -maxVertical) {
+                    velocity.setY(-maxVertical);
+                }
+
+                victim.setVelocity(velocity);
             }
         }
         if(consumer != null) consumer.accept(victim, attacker);
@@ -85,7 +111,8 @@ public class DamageType {
         }, 1);
     }
 
-    public void damageAoERaycasts(@Nullable LivingEntity attacker, Location loc, double amount, int size, double damageFalloff) {
+    public List<LivingEntity> damageAoERaycasts(@Nullable LivingEntity attacker, Location loc, double amount, int size, double damageFalloff) {
+        List<LivingEntity> l = new ArrayList<>();
         for(Entity e : loc.getNearbyLivingEntities(size, size, size)) {
             if(attacker != null && e.getUniqueId().equals(attacker.getUniqueId())) continue;
             Raycast rc = new Raycast.Builder(size*10, 0.1)
@@ -96,6 +123,7 @@ public class DamageType {
                     .piercesEntities(true)
                     .entityCollideEffect((_, entity, integer) -> {
                         if (entity instanceof LivingEntity li) {
+                            if(!l.contains(li)) l.add(li);
                             damage(li, attacker, amount - (damageFalloff * integer));
                         }
                     })
@@ -106,6 +134,7 @@ public class DamageType {
                 rc.raycast(loc, li.getEyeLocation());
             }
         }
+        return l;
     }
 
     public String getDeathMessage() {
