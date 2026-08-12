@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EphemeralEntityUtil implements Listener {
     private static final Map<UUID, ConcurrentHashMap<String, Boolean>> ephemeralBooleans = new ConcurrentHashMap<>();
     private static final Map<UUID, ConcurrentHashMap<String, Integer>> ephemeralInts = new ConcurrentHashMap<>();
+    private static final Map<UUID, ConcurrentHashMap<String, String>> ephemeralStrings = new ConcurrentHashMap<>();
 
     public static void setEphemeralBoolean(Entity entity, boolean value, String id) {
         ephemeralBooleans.computeIfAbsent(entity.getUniqueId(), k -> new ConcurrentHashMap<>()).put(id, value);
@@ -24,6 +25,18 @@ public class EphemeralEntityUtil implements Listener {
             return map.getOrDefault(id, false);
         }
         return false;
+    }
+
+    public static void setEphemeralString(Entity entity, String value, String id) {
+        ephemeralStrings.computeIfAbsent(entity.getUniqueId(), k -> new ConcurrentHashMap<>()).put(id, value);
+    }
+
+    public static String getEphemeralString(Entity entity, String id) {
+        ConcurrentHashMap<String, String> map = ephemeralStrings.get(entity.getUniqueId());
+        if (map != null) {
+            return map.getOrDefault(id, "");
+        }
+        return "";
     }
 
     public static void setEphemeralInt(Entity entity, int value, String id) {
@@ -54,6 +67,7 @@ public class EphemeralEntityUtil implements Listener {
         UUID id = entity.getUniqueId();
         ephemeralBooleans.remove(id);
         ephemeralInts.remove(id);
+        ephemeralStrings.remove(id);
     }
 
     @EventHandler

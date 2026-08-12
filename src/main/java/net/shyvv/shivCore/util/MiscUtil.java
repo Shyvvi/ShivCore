@@ -233,6 +233,23 @@ public class MiscUtil {
         return getLowestLocation(loc, 10);
     }
 
+    public static Location getHighestLocation(Location loc, int blocks) {
+        Location check = loc.clone();
+        for (int i = 0; i < blocks*10; i++) {
+            Location above = check.clone().add(0, 0.1, 0);
+            if (!above.getBlock().isCollidable()) {
+                return check;
+            }
+            check = above;
+        }
+
+        return null;
+    }
+
+    public static Location getHighestLocation(Location loc) {
+        return getHighestLocation(loc, 10);
+    }
+
     public static void attemptDisableShield(Player p, int time) {
         if(p.isBlocking()) {
             p.getWorld().playSound(p.getLocation(), Sound.ITEM_SHIELD_BREAK, 1, 1);

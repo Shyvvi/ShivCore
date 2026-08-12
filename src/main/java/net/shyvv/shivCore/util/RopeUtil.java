@@ -48,6 +48,7 @@ public class RopeUtil {
                     }
                 })
                 .build();
+
         activeRopes.put(ropeBase, ropeSegments);
         r.raycast(loc1, loc2);
         return finalLength.get();
@@ -58,7 +59,6 @@ public class RopeUtil {
     }
 
     public static void removeRope(Entity ropeBase) {
-        ropeBase.sendMessage(activeRopes.keySet().toString());
         if(activeRopes.containsKey(ropeBase)) {
             activeRopes.get(ropeBase).forEach(Entity::remove);
             activeRopes.remove(ropeBase);

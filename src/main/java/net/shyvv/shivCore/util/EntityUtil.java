@@ -139,4 +139,8 @@ public class EntityUtil {
         storeLocation(entity, entity.getLocation(), "hasMoved");
         return false;
     }
+
+    public static boolean entityHasID(Entity e, String s) {
+        return getString(e, "ENTITY_IDENTIFICATION").equals(s);
+    }
 }
