@@ -1,6 +1,7 @@
 package net.shyvv.shivCore.util;
 
 import net.shyvv.shivCore.ShivCore;
+import net.shyvv.shivCore.entities.AbstractTickingEntity;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
@@ -140,7 +141,15 @@ public class EntityUtil {
         return false;
     }
 
-    public static boolean entityHasID(Entity e, String s) {
-        return getString(e, "ENTITY_IDENTIFICATION").equals(s);
+    public static boolean entityHasID(Entity e, String id) {
+        return getString(e, "ENTITY_IDENTIFICATION").equals(id);
+    }
+
+    public static AbstractTickingEntity resolveTickingEntityClass(Entity e) {
+        String key = EntityUtil.getString(e, "ENTITY_IDENTIFICATION");
+        if(EntityManager.TICKING_ENTITY_LOOKUP.containsKey(key)) {
+            return EntityManager.TICKING_ENTITY_LOOKUP.get(key);
+        }
+        return null;
     }
 }
