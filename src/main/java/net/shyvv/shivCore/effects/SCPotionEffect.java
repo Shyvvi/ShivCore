@@ -26,23 +26,21 @@ public record SCPotionEffect(String id, PotionEffectType override, BiConsumer<Li
     }
 
     public void addPotionEffect(LivingEntity p, int duration, int level) {
-        if(!hasPotionEffect(p)) {
-            if (getType() != null) p.addPotionEffect(new PotionEffect(getType(), duration, level));
-            EphemeralEntityUtil.setEphemeralInt(p, duration, id() + "PotionTicking");
-            EphemeralEntityUtil.setEphemeralInt(p, duration, id() + "PotionLevel");
-            Bukkit.getScheduler().runTaskTimer(ShivCore.getInstance(), bukkitTask -> {
-                int i = EphemeralEntityUtil.decrementEphemeralInt(p, id() + "PotionTicking");
-                if (!p.isValid()) {
-                    bukkitTask.cancel();
-                    return;
-                }
-                if (tickFunction != null) tickFunction.accept(p, level);
-                if (i <= 0 || EphemeralEntityUtil.getEphemeralBoolean(p, id()+"PotionCancelled")) {
-                    if (finishFunction != null) finishFunction.accept(p, level);
-                    bukkitTask.cancel();
-                }
-            }, 1, 1);
-        }
+        if (getType() != null) p.addPotionEffect(new PotionEffect(getType(), duration, level, false, true, true));
+        EphemeralEntityUtil.setEphemeralInt(p, duration, id() + "PotionTicking");
+        EphemeralEntityUtil.setEphemeralInt(p, level, id() + "PotionLevel");
+        Bukkit.getScheduler().runTaskTimer(ShivCore.getInstance(), bukkitTask -> {
+            int i = EphemeralEntityUtil.decrementEphemeralInt(p, id() + "PotionTicking");
+            if (!p.isValid()) {
+                bukkitTask.cancel();
+                return;
+            }
+            if (tickFunction != null) tickFunction.accept(p, level);
+            if (i <= 0 || EphemeralEntityUtil.getEphemeralBoolean(p, id()+"PotionCancelled")) {
+                if (finishFunction != null) finishFunction.accept(p, level);
+                bukkitTask.cancel();
+            }
+        }, 1, 1);
     }
 
     public void removePotionEffect(LivingEntity p) {
