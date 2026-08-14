@@ -27,6 +27,7 @@ public class DamageType {
     String damageTypeID;
     int ignitionTime;
     boolean ignoresIFrames;
+    boolean hardIgnoresIFrames;
     boolean damagesTrustedPlayers;
     boolean blockable;
     BiConsumer<LivingEntity, LivingEntity> consumer;
@@ -40,13 +41,14 @@ public class DamageType {
         this.ignitionTime = builder.ignitionTime;
         this.blockable = builder.blockable;
         this.consumer = builder.consumer;
+        this.hardIgnoresIFrames = builder.hardIgnoresIFrames;
         DamageManager.damageTypeList.add(this);
     }
 
     public void damage(LivingEntity victim, @Nullable LivingEntity attacker, double amount) {
         // I know that this is a "bad practice" but I didn't wanna put everything into a conditional statement and introduce conflicting variables
         if(victim instanceof Player p && attacker instanceof Player pa && TrustUtil.playerIsTrusted(pa, p.getName()) && !damagesTrustedPlayers) return;
-        if(ignoresIFrames) victim.setNoDamageTicks(0);
+        if(hardIgnoresIFrames) victim.setNoDamageTicks(0);
 
         for(int i = 0; i < DamageManager.damageTypeList.size(); i++) {
             if(damageTypeID.equals(DamageManager.damageTypeList.get(i).damageTypeID)) {
@@ -148,6 +150,7 @@ public class DamageType {
     public static class Builder {
         int ignitionTime = 0;
         boolean ignoresIFrames = false;
+        boolean hardIgnoresIFrames = false;
         boolean damagesTrustedPlayers = true;
         boolean blockable = false;
         Vector2d knockback = new Vector2d(0,0);
@@ -171,6 +174,11 @@ public class DamageType {
 
         public Builder ignoresIFrames(boolean bool) {
             this.ignoresIFrames = bool;
+            return this;
+        }
+
+        public Builder hardIgnoresIFrames(boolean bool) {
+            this.hardIgnoresIFrames = bool;
             return this;
         }
 
