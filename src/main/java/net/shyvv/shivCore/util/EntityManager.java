@@ -73,7 +73,13 @@ public class EntityManager {
                     this.cancel();
                     return;
                 }
-                entityClass.primaryTick(e);
+                try {
+                    entityClass.primaryTick(e);
+                } catch (Exception ee) {
+                    e.getPassengers().forEach(Entity::remove);
+                    e.remove();
+                    ShivCore.getInstance().getLogger().warning(ee.getMessage());
+                }
             }
         }.runTaskTimer(ShivCore.getInstance(), 0, 1);
     }
