@@ -4,6 +4,7 @@ import net.shyvv.shivCore.ShivCore;
 import org.bukkit.Location;
 import org.bukkit.scheduler.BukkitRunnable;
 
+@Deprecated
 public abstract class AbstractEntityless {
     /// Location of the entityless
     public Location location;

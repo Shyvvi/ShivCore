@@ -15,9 +15,9 @@ import java.util.function.Predicate;
 
 public class Entities {
     public static TestEntity TEST_ENTITY = new TestEntity(EntityType.ARMOR_STAND, "testEntity", new BehaviorController.Builder()
-            .addBehavior(new TestEntity.Blaze("blazeBehavior", false, entity -> EntityUtil.getInt(entity, "lifetime") > 400))
-            .addBehavior(new TestEntity.Breeze("breezeBehavior", false, entity -> EntityUtil.getInt(entity, "lifetime") > 200))
-            .setDefaultBehavior(new TestEntity.Default("defaultBehavior"))
+            .addBehavior(new TestEntity.Blaze("blazeBehavior",  entity -> EntityUtil.getInt(entity, "lifetime") > 400))
+            .addBehavior(new TestEntity.Breeze("breezeBehavior",  entity -> EntityUtil.getInt(entity, "lifetime") > 200))
+            .setDefaultBehavior(new TestEntity.Default())
             .build());
 
     public static TestAnimatedEntity TEST_ANIMATED_ENTITY = new TestAnimatedEntity(Material.COMMAND_BLOCK, "testAnimatedEntity", new AnimationController.Builder()

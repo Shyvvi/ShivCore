@@ -22,10 +22,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
-public abstract class AbstractTickingEntity implements Listener {
+public abstract class AbstractTickingEntity<T extends Entity> implements Listener {
     final EntityType baseEntity;
     final String entityID;
-    BehaviorController behaviorController = null;
+    BehaviorController behaviorController;
 
     private final NamespacedKey ownerKey = new NamespacedKey(ShivCore.getInstance(), "OWNER");
 
@@ -42,8 +42,8 @@ public abstract class AbstractTickingEntity implements Listener {
         this(baseEntity, entityID, null);
     }
 
-    public abstract void tick(Entity entity);
-    protected abstract void spawnArgs(Entity entity);
+    public abstract void tick(T entity);
+    protected abstract void spawnArgs(T entity);
 
     public EntityType getBaseEntity() {
         return this.baseEntity;
@@ -58,7 +58,7 @@ public abstract class AbstractTickingEntity implements Listener {
     }
 
     /// Use tick and ignore this. This is just used for taking into account entity behaviors
-    public void primaryTick(Entity e) {
+    public void primaryTick(T e) {
         tick(e);
         if(behaviorController != null) {
             behaviorController.tickBehaviors(e);
@@ -76,7 +76,7 @@ public abstract class AbstractTickingEntity implements Listener {
         entity.getPersistentDataContainer().set(ownerKey, PersistentDataType.STRING, owner.getUniqueId().toString());
     }
 
-    private <T extends Entity> Entity getOwner(Entity entity, Class<T> ownerEntityClass, boolean ownerIsPlayer) {
+    private <R extends Entity> Entity getOwner(Entity entity, Class<R> ownerEntityClass, boolean ownerIsPlayer) {
         if(entity.getPersistentDataContainer().has(ownerKey)) {
             if(ownerIsPlayer) {
                 for(Player e : entity.getWorld().getPlayers()) {
@@ -94,7 +94,7 @@ public abstract class AbstractTickingEntity implements Listener {
         }
         return null;
     }
-    public <T extends Entity> Entity getOwner(Entity entity, Class<T> ownerEntityClass) {
+    public <R extends Entity> Entity getOwner(Entity entity, Class<R> ownerEntityClass) {
         return getOwner(entity, ownerEntityClass, false);
     }
     public Player getOwner(Entity entity) {
@@ -123,10 +123,10 @@ public abstract class AbstractTickingEntity implements Listener {
         } catch (Exception ignored) {}
     }
 
-    public Entity spawn(Location loc) {
+    public T spawn(Location loc) {
         World world = loc.getWorld();
         assert world != null;
-        Entity entity = world.spawnEntity(loc, getBaseEntity());
+        T entity = (T) world.spawnEntity(loc, getBaseEntity());
         spawnArgs(entity);
         EntityUtil.setBoolean(entity, true, EntityManager.TICKING_KEY);
         EntityUtil.setString(entity, getEntityID(), "ENTITY_IDENTIFICATION");
@@ -134,8 +134,8 @@ public abstract class AbstractTickingEntity implements Listener {
         return entity;
     }
 
-    public Entity spawn(Location loc, Entity owner) {
-        Entity e = spawn(loc);
+    public T spawn(Location loc, Entity owner) {
+        T e = spawn(loc);
         setOwner(e, owner);
         return e;
     }
@@ -146,10 +146,10 @@ public abstract class AbstractTickingEntity implements Listener {
      * @param isDuplicate if the entity spawns with a duplicate or not
      * @return duplicate entity
      */
-    public Entity spawn(Location loc, boolean isDuplicate) {
+    public T spawn(Location loc, boolean isDuplicate) {
         String id = UUID.randomUUID().toString();
         EntityUtil.setString(spawn(loc), id, "dupeTarget");
-        Entity e = spawn(loc);
+        T e = spawn(loc);
         EntityUtil.setString(e, id, "dupeTarget");
         EntityUtil.setBoolean(e, isDuplicate, "isDuplicate");
         return e;
@@ -157,19 +157,6 @@ public abstract class AbstractTickingEntity implements Listener {
 
     public boolean isDuplicate(Entity entity) {
         return EntityUtil.getBoolean(entity, "isDuplicate");
-    }
-
-    @ApiStatus.OverrideOnly
-    public void moveArgs(Entity entity) {}
-
-    public void move(Entity entity, double distance) {
-        entity.teleport(MiscUtil.getRelativeLocation(entity.getLocation(), distance, 0, 0));
-        moveArgs(entity);
-    }
-
-    public void move(Entity entity, Location startPos, double distance) {
-        entity.teleport(MiscUtil.getRelativeLocation(startPos, distance, 0, 0));
-        moveArgs(entity);
     }
 
     public void init(){}

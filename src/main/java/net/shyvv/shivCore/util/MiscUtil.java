@@ -2,8 +2,10 @@ package net.shyvv.shivCore.util;
 
 import net.shyvv.shivCore.ui.InvUserInterface;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2d;
@@ -192,25 +194,17 @@ public class MiscUtil {
 
     private static void createCircle(Location center, Vector forward, double size, double speed, Particle particle, Object particleData, boolean forced) {
         World world = center.getWorld();
-
         if (world != null) {
             forward = forward.clone().normalize();
-
             Vector worldUp = Math.abs(forward.getY()) > 0.999 ? new Vector(1, 0, 0) : new Vector(0, 1, 0);
             Vector right = forward.clone().crossProduct(worldUp).normalize();
             Vector up = right.clone().crossProduct(forward).normalize();
-
             for (int degrees = 0; degrees < 360; degrees += 10) {
-
                 double cos = Math.cos(Math.toRadians(degrees));
                 double sin = Math.sin(Math.toRadians(degrees));
-
                 Vector point = right.clone().multiply(cos * size).add(up.clone().multiply(sin * size));
-
                 Location particleLoc = center.clone().add(point);
-
                 Vector particleDir = point.clone().normalize().multiply(speed);
-
                 world.spawnParticle(particle, particleLoc, 0, particleDir.getX(), particleDir.getY(), particleDir.getZ(), Math.abs(speed), particleData, forced);
             }
         }
@@ -220,7 +214,7 @@ public class MiscUtil {
         Location check = loc.clone();
         for (int i = 0; i < blocks*10; i++) {
             Location below = check.clone().add(0, -0.1, 0);
-            if (below.getBlock().isCollidable()) {
+            if(isCollidable(below.getBlock())) {
                 return check;
             }
             check = below;
@@ -237,13 +231,18 @@ public class MiscUtil {
         Location check = loc.clone();
         for (int i = 0; i < blocks*10; i++) {
             Location above = check.clone().add(0, 0.1, 0);
-            if (!above.getBlock().isCollidable()) {
+            if (!isCollidable(above.getBlock())) {
                 return check;
             }
             check = above;
         }
 
         return null;
+    }
+
+    public static boolean isCollidable(Block b) {
+        BoundingBox box = b.getBoundingBox();
+        return box.getMinX() == b.getX() && box.getMinY() == b.getY() && box.getMinZ() == b.getZ() && box.getMaxX() == b.getX() + 1 && box.getMaxY() == b.getY() + 1 && box.getMaxZ() == b.getZ() + 1 && b.isCollidable();
     }
 
     public static Location getHighestLocation(Location loc) {

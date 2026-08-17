@@ -120,8 +120,8 @@ public class EntityUtil {
                 getFloat(entity, "entityXCoordinate"+locationKey),
                 getFloat(entity, "entityYCoordinate"+locationKey),
                 getFloat(entity, "entityZCoordinate"+locationKey),
-                getFloat(entity, "entityPitchCoordinate"+locationKey),
-                getFloat(entity, "entityYawCoordinate"+locationKey)
+                getFloat(entity, "entityYawCoordinate"+locationKey),
+                getFloat(entity, "entityPitchCoordinate"+locationKey)
         );
     }
 

@@ -4,7 +4,7 @@ import net.shyvv.shivCore.entities.behavior.BehaviorController;
 import net.shyvv.shivCore.util.EntityUtil;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-
+@Deprecated
 public abstract class TemporaryEntity extends AbstractTickingEntity {
     public TemporaryEntity(EntityType baseEntity, String entityID, BehaviorController behaviorController) {
         super(baseEntity, entityID, behaviorController);

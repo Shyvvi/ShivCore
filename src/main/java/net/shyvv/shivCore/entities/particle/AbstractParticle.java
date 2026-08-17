@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
 import org.joml.Vector3f;
 
-public abstract class AbstractParticle extends AbstractTickingEntity {
+public abstract class AbstractParticle extends AbstractTickingEntity<ItemDisplay> {
     FrameAnimation particleAnimation;
     Material baseItem;
     int lifeTime;
@@ -57,7 +57,7 @@ public abstract class AbstractParticle extends AbstractTickingEntity {
     }
 
     @Override
-    public void tick(Entity entity) {
+    public void tick(ItemDisplay entity) {
         getParticleAnimation().tickFrames(entity);
         particleTick(entity);
 
@@ -84,7 +84,7 @@ public abstract class AbstractParticle extends AbstractTickingEntity {
     }
 
     @Override
-    protected void spawnArgs(Entity entity) {
+    protected void spawnArgs(ItemDisplay entity) {
         ItemDisplay ie = (ItemDisplay) entity;
         ItemStack displayStack = new ItemStack(baseItem);
         ie.setItemStack(displayStack);

@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
-public class RopeSegment extends AbstractTickingEntity {
+public class RopeSegment extends AbstractTickingEntity<ItemDisplay> {
     private final ItemStack display;
     private final boolean isGlowing;
     public RopeSegment(String entityID, ItemStack display, boolean isGlowing) {
@@ -23,13 +23,13 @@ public class RopeSegment extends AbstractTickingEntity {
     }
 
     @Override
-    public void tick(Entity entity) {
+    public void tick(ItemDisplay entity) {
         Entity owner = entity.getWorld().getEntity(UUID.fromString(EntityUtil.getString(entity, "ropeAnchoringEntity")));
         if(owner == null || !owner.isValid() || owner.isDead()) entity.remove();
     }
 
     @Override
-    protected void spawnArgs(Entity entity) {
+    protected void spawnArgs(ItemDisplay entity) {
         ItemDisplay id = (ItemDisplay) entity;
         id.setTeleportDuration(1);
         id.setInterpolationDuration(1);

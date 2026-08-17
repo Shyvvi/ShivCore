@@ -7,6 +7,7 @@ import org.bukkit.entity.Entity;
 
 import java.util.Collection;
 
+@Deprecated
 public interface ProjectileFunctions {
 
     /// collide Block/Entity is pretty self-explanatory

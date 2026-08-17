@@ -9,7 +9,7 @@ import org.bukkit.entity.ItemDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ItemType;
 
-public abstract class AbstractAnimatedEntity extends AbstractTickingEntity {
+public abstract class AbstractAnimatedEntity extends AbstractTickingEntity<ItemDisplay> {
     AnimationController animationController;
     Material baseItem;
     public AbstractAnimatedEntity(Material baseItem, String entityID, BehaviorController behaviorController, AnimationController ac) {
@@ -22,12 +22,12 @@ public abstract class AbstractAnimatedEntity extends AbstractTickingEntity {
     }
 
     @Override
-    public void tick(Entity entity) {
+    public void tick(ItemDisplay entity) {
         animationController.tickAnimations(entity);
     }
 
     @Override
-    protected void spawnArgs(Entity entity) {
+    protected void spawnArgs(ItemDisplay entity) {
         ItemDisplay ie = (ItemDisplay) entity;
         ItemStack displayStack = new ItemStack(baseItem);
         ie.setItemStack(displayStack);
