@@ -78,7 +78,7 @@ public class EntityManager {
                 } catch (Exception ee) {
                     e.getPassengers().forEach(Entity::remove);
                     e.remove();
-                    ShivCore.getInstance().getLogger().warning(ee.getMessage());
+                    ee.printStackTrace();
                 }
             }
         }.runTaskTimer(ShivCore.getInstance(), 0, 1);

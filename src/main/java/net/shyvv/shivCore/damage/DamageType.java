@@ -7,6 +7,7 @@ import net.shyvv.shivCore.util.EntityUtil;
 import net.shyvv.shivCore.util.MiscUtil;
 import net.shyvv.shivCore.util.Raycast;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -92,7 +93,8 @@ public class DamageType {
         if(victim instanceof Player pv) {
             if(blockable && pv.isBlocking()) {
                 EquipmentSlot shieldSlot = pv.getActiveItemHand();
-                pv.damageItemStack(shieldSlot, (int) amount);
+                pv.getWorld().playSound(pv, Sound.ITEM_SHIELD_BLOCK, 0.5f, 1);
+                pv.damageItemStack(shieldSlot, (int) ((int) amount/1.5));
             } else {
                 if (attacker instanceof Player pa && TrustUtil.playerIsTrusted(pa, pv.getName()) && damagesTrustedPlayers) {
                     pv.damage(Float.parseFloat(Configs.SHIVCORE_CONFIG.getString("trustedPlayersDamageReduction")) * amount);

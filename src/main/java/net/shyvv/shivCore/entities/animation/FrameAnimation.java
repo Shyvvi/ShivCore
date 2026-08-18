@@ -39,79 +39,74 @@ public class FrameAnimation {
     public void tickFrames(Entity e) {
         ItemDisplay ie = (ItemDisplay) e;
         int s = customModelDatas.size();
-        int af = getInt(ie, activeFrameID);
-        int fd = incrementInt(ie, frameTimeID);
 
         ie.setBrightness(new Display.Brightness(brightness, brightness));
         ie.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.HEAD);
 
-        if(this.facesCamera) {
+        if (facesCamera) {
             ie.setBillboard(Display.Billboard.CENTER);
         }
 
-        //Frame is being changed
-        if(fd > frameDuration) {
-            incrementInt(ie, activeFrameID);
+        int fd = incrementInt(ie, frameTimeID);
+
+        if (fd >= frameDuration) {
             setInt(ie, 0, frameTimeID);
 
-            //Setting the next frame back to 0
-            if(af > s) {
-                setInt(ie, 0, activeFrameID);
-            }
+            int af = getInt(ie, activeFrameID);
 
-            //Changing the texture of the Item Display and the size
-            ItemStack is = ie.getItemStack();
-            ItemMeta im = is.getItemMeta();
-            for(int i = 0; i < s; i++) {
-                if(af == i) {
-                    Frame frame = customModelDatas.get(i);
-                    float sizeX;
-                    float sizeY;
-                    float sizeZ;
+            if (af + 1 < s) {
+                af++;
+                setInt(ie, af, activeFrameID);
 
-                    // cmd stuffs!
-                    im.setCustomModelData(frame.getCustomModelData());
-                    is.setItemMeta(im);
-                    ie.setItemStack(is);
+                Frame frame = customModelDatas.get(af);
 
-                    // Size stuffs!
-                    if(fixedSize == null) {
-                        if (frame.usesSizeVector()) {
-                            Vector sizeVector = frame.getFrameDisplaySizeVector();
-                            sizeX = (float) sizeVector.getX();
-                            sizeY = (float) sizeVector.getY();
-                            sizeZ = (float) sizeVector.getZ();
-                        } else {
-                            //Looking at "size" this much makes me dyslexic
-                            float size = frame.getFrameDisplaySize();
-                            sizeX = size;
-                            sizeY = size;
-                            sizeZ = size;
-                        }
+                ItemStack is = ie.getItemStack();
+                ItemMeta im = is.getItemMeta();
+
+                im.setCustomModelData(frame.getCustomModelData());
+                is.setItemMeta(im);
+                ie.setItemStack(is);
+
+                float sizeX;
+                float sizeY;
+                float sizeZ;
+
+                if (fixedSize == null) {
+                    if (frame.usesSizeVector()) {
+                        Vector sizeVector = frame.getFrameDisplaySizeVector();
+                        sizeX = (float) sizeVector.getX();
+                        sizeY = (float) sizeVector.getY();
+                        sizeZ = (float) sizeVector.getZ();
                     } else {
-                        sizeX = (float) fixedSize.getX();
-                        sizeY = (float) fixedSize.getY();
-                        sizeZ = (float) fixedSize.getZ();
+                        float size = frame.getFrameDisplaySize();
+                        sizeX = size;
+                        sizeY = size;
+                        sizeZ = size;
                     }
-
-                    sizeX += getSizeModifier(e);
-                    sizeY += getSizeModifier(e);
-                    sizeZ += getSizeModifier(e);
-
-                    if(facesCamera) {
-                        sizeZ = 1;
-                    }
-
-                    //Setting the changed size values
-                    Transformation defaultTransformation = ie.getTransformation();
-                    ie.setTransformation(new Transformation(
-                            defaultTransformation.getTranslation(),
-                            defaultTransformation.getLeftRotation(),
-                            // we only want to change the size here, right?
-                            new Vector3f(sizeX, sizeY, sizeZ),
-                            defaultTransformation.getRightRotation())
-                    );
+                } else {
+                    sizeX = (float) fixedSize.getX();
+                    sizeY = (float) fixedSize.getY();
+                    sizeZ = (float) fixedSize.getZ();
                 }
+
+                float sizeModifier = getSizeModifier(e);
+
+                sizeX += sizeModifier;
+                sizeY += sizeModifier;
+                sizeZ += sizeModifier;
+
+                if (facesCamera) {
+                    sizeZ = 1;
+                }
+
+                Transformation transformation = ie.getTransformation();
+
+                ie.setTransformation(new Transformation(
+                        transformation.getTranslation(),
+                        transformation.getLeftRotation(),
+                        new Vector3f(sizeX, sizeY, sizeZ),
+                        transformation.getRightRotation()
+                ));
             }
         }
     }
