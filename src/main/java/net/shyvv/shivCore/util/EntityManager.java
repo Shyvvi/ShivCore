@@ -1,25 +1,16 @@
 package net.shyvv.shivCore.util;
 
-import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
-import net.kyori.adventure.text.Component;
 import net.shyvv.shivCore.ShivCore;
 import net.shyvv.shivCore.entities.AbstractTickingEntity;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.world.EntitiesLoadEvent;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -85,7 +76,7 @@ public class EntityManager {
     }
 
     public static boolean entityIsTicking(Entity e) {
-        return EphemeralEntityUtil.getEphemeralBoolean(e, "isCurrentlyTicking");
+        return EphemeralEntityUtil.getBoolean(e, "isCurrentlyTicking");
     }
 
     // this is fine I guess, trying my best to keep shit organized

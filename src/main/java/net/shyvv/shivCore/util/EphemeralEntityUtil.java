@@ -1,6 +1,5 @@
 package net.shyvv.shivCore.util;
 
-import net.shyvv.shivCore.ShivCore;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,13 +12,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EphemeralEntityUtil implements Listener {
     private static final Map<UUID, ConcurrentHashMap<String, Boolean>> ephemeralBooleans = new ConcurrentHashMap<>();
     private static final Map<UUID, ConcurrentHashMap<String, Integer>> ephemeralInts = new ConcurrentHashMap<>();
+    private static final Map<UUID, ConcurrentHashMap<String, Double>> ephemeralDoubles = new ConcurrentHashMap<>();
     private static final Map<UUID, ConcurrentHashMap<String, String>> ephemeralStrings = new ConcurrentHashMap<>();
 
-    public static void setEphemeralBoolean(Entity entity, boolean value, String id) {
+    public static void setBoolean(Entity entity, boolean value, String id) {
         ephemeralBooleans.computeIfAbsent(entity.getUniqueId(), k -> new ConcurrentHashMap<>()).put(id, value);
     }
 
-    public static boolean getEphemeralBoolean(Entity entity, String id) {
+    public static boolean getBoolean(Entity entity, String id) {
         ConcurrentHashMap<String, Boolean> map = ephemeralBooleans.get(entity.getUniqueId());
         if (map != null) {
             return map.getOrDefault(id, false);
@@ -27,11 +27,11 @@ public class EphemeralEntityUtil implements Listener {
         return false;
     }
 
-    public static void setEphemeralString(Entity entity, String value, String id) {
+    public static void setString(Entity entity, String value, String id) {
         ephemeralStrings.computeIfAbsent(entity.getUniqueId(), k -> new ConcurrentHashMap<>()).put(id, value);
     }
 
-    public static String getEphemeralString(Entity entity, String id) {
+    public static String getString(Entity entity, String id) {
         ConcurrentHashMap<String, String> map = ephemeralStrings.get(entity.getUniqueId());
         if (map != null) {
             return map.getOrDefault(id, "");
@@ -39,11 +39,11 @@ public class EphemeralEntityUtil implements Listener {
         return "";
     }
 
-    public static void setEphemeralInt(Entity entity, int value, String id) {
+    public static void setInt(Entity entity, int value, String id) {
         ephemeralInts.computeIfAbsent(entity.getUniqueId(), k -> new ConcurrentHashMap<>()).put(id, value);
     }
 
-    public static int getEphemeralInt(Entity entity, String id) {
+    public static int getInt(Entity entity, String id) {
         ConcurrentHashMap<String, Integer> map = ephemeralInts.get(entity.getUniqueId());
         if (map != null) {
             return map.getOrDefault(id, 0);
@@ -51,15 +51,27 @@ public class EphemeralEntityUtil implements Listener {
         return 0;
     }
 
-    public static int incrementEphemeralInt(Entity entity, String id) {
-        int i = getEphemeralInt(entity, id);
-        setEphemeralInt(entity, i + 1, id);
+    public static void setDouble(Entity entity, double value, String id) {
+        ephemeralDoubles.computeIfAbsent(entity.getUniqueId(), k -> new ConcurrentHashMap<>()).put(id, value);
+    }
+
+    public static double getDouble(Entity entity, String id) {
+        ConcurrentHashMap<String, Double> map = ephemeralDoubles.get(entity.getUniqueId());
+        if (map != null) {
+            return map.getOrDefault(id, 0.0);
+        }
+        return 0;
+    }
+
+    public static int incrementInt(Entity entity, String id) {
+        int i = getInt(entity, id);
+        setInt(entity, i + 1, id);
         return i;
     }
 
-    public static int decrementEphemeralInt(Entity entity, String id) {
-        int i = getEphemeralInt(entity, id);
-        setEphemeralInt(entity, i - 1, id);
+    public static int decrementInt(Entity entity, String id) {
+        int i = getInt(entity, id);
+        setInt(entity, i - 1, id);
         return i;
     }
 
@@ -72,7 +84,6 @@ public class EphemeralEntityUtil implements Listener {
 
     @EventHandler
     private void onPlayerQuit(PlayerQuitEvent e) {
-        System.out.print("TEST");
         clearEphemeralData(e.getPlayer());
     }
 }

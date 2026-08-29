@@ -27,16 +27,16 @@ public record SCPotionEffect(String id, PotionEffectType override, BiConsumer<Li
 
     public void addPotionEffect(LivingEntity p, int duration, int level) {
         if (getType() != null) p.addPotionEffect(new PotionEffect(getType(), duration, level, false, true, true));
-        EphemeralEntityUtil.setEphemeralInt(p, duration, id() + "PotionTicking");
-        EphemeralEntityUtil.setEphemeralInt(p, level, id() + "PotionLevel");
+        EphemeralEntityUtil.setInt(p, duration, id() + "PotionTicking");
+        EphemeralEntityUtil.setInt(p, level, id() + "PotionLevel");
         Bukkit.getScheduler().runTaskTimer(ShivCore.getInstance(), bukkitTask -> {
-            int i = EphemeralEntityUtil.decrementEphemeralInt(p, id() + "PotionTicking");
+            int i = EphemeralEntityUtil.decrementInt(p, id() + "PotionTicking");
             if (!p.isValid()) {
                 bukkitTask.cancel();
                 return;
             }
             if (tickFunction != null) tickFunction.accept(p, level);
-            if (i <= 0 || EphemeralEntityUtil.getEphemeralBoolean(p, id()+"PotionCancelled")) {
+            if (i <= 0 || EphemeralEntityUtil.getBoolean(p, id()+"PotionCancelled")) {
                 if (finishFunction != null) finishFunction.accept(p, level);
                 bukkitTask.cancel();
             }
@@ -44,11 +44,11 @@ public record SCPotionEffect(String id, PotionEffectType override, BiConsumer<Li
     }
 
     public void removePotionEffect(LivingEntity p) {
-        EphemeralEntityUtil.setEphemeralBoolean(p, true, id() + "PotionCancelled");
+        EphemeralEntityUtil.setBoolean(p, true, id() + "PotionCancelled");
     }
 
     public boolean hasPotionEffect(LivingEntity p) {
-        return EphemeralEntityUtil.getEphemeralInt(p, id()+"PotionTicking") > 0;
+        return EphemeralEntityUtil.getInt(p, id()+"PotionTicking") > 0;
     }
 
     public PotionEffectType getType() {
@@ -58,7 +58,7 @@ public record SCPotionEffect(String id, PotionEffectType override, BiConsumer<Li
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
         if(e.getEntity() instanceof LivingEntity p && hasPotionEffect(p) && damageFunction != null) {
-            damageFunction.accept(p, e, EphemeralEntityUtil.getEphemeralInt(p, id()+"PotionLevel"));
+            damageFunction.accept(p, e, EphemeralEntityUtil.getInt(p, id()+"PotionLevel"));
         }
     }
 }
