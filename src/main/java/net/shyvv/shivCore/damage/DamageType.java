@@ -141,6 +141,36 @@ public class DamageType {
         return l;
     }
 
+    public List<LivingEntity> damageAoERanges(@Nullable LivingEntity attacker, Location loc, double amount, double outerRangeAmount, int outerRange, double innerRange) {
+        List<LivingEntity> l = new ArrayList<>();
+        for(Entity e : loc.getNearbyLivingEntities(outerRange, outerRange, outerRange)) {
+            if(attacker != null && e.getUniqueId().equals(attacker.getUniqueId())) continue;
+            Raycast rc = new Raycast.Builder(outerRange*10, 0.1)
+                    .collidesEntities(true)
+                    .collidesBlocks(true)
+                    .blockCollideCondition(Block::isCollidable)
+                    .setBlockPhaseStepAmount(5)
+                    .piercesEntities(true)
+                    .entityCollideEffect((_, entity, integer) -> {
+                        if (entity instanceof LivingEntity li) {
+                            if(!l.contains(li)) l.add(li);
+                            if(integer > innerRange) {
+                                damage(li, attacker, outerRangeAmount);
+                            } else {
+                                damage(li, attacker, amount);
+                            }
+                        }
+                    })
+                    .exemptEntityCondition(entity -> attacker != null && entity.getUniqueId().equals(attacker.getUniqueId()))
+                    .build();
+            if(e instanceof LivingEntity li) {
+                rc.raycast(loc, li.getLocation());
+                rc.raycast(loc, li.getEyeLocation());
+            }
+        }
+        return l;
+    }
+
     public String getDeathMessage() {
         return this.deathMessage;
     }
