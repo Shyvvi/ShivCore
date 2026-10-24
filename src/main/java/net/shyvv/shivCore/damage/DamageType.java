@@ -60,8 +60,7 @@ public class DamageType {
     }
 
     public void damage(LivingEntity victim, @Nullable LivingEntity attacker, double amount) {
-        // I know that this is a "bad practice" but I didn't wanna put everything into a conditional statement and introduce conflicting variables
-        if(victim instanceof Player p && attacker instanceof Player pa && TrustUtil.playerIsTrusted(pa, p.getName()) && !damagesTrustedPlayers) return;
+        if(victim instanceof Player p && attacker instanceof Player pa && TrustUtil.playerIsTrusted(pa, p.getName()) && !damagesTrustedPlayers) return; // die ~
         if(hardIgnoresIFrames) victim.setNoDamageTicks(0);
 
         for(int i = 0; i < DamageManager.damageTypeList.size(); i++) {
@@ -104,7 +103,7 @@ public class DamageType {
         if(consumer != null) consumer.accept(victim, attacker);
 
         double epfMultiplier = getTotalEPF(victim);
-        double finalDamage = amount * (1 + (epfMultiplier * 0.04));
+        double finalDamage = amount * (1 + (epfMultiplier * 0.1));
         if(victim instanceof Player pv) {
             if(blockable && pv.isBlocking()) {
                 EquipmentSlot shieldSlot = pv.getActiveItemHand();
