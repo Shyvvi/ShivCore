@@ -9,6 +9,7 @@ import net.shyvv.shivCore.util.Raycast;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -44,6 +45,18 @@ public class DamageType {
         this.consumer = builder.consumer;
         this.hardIgnoresIFrames = builder.hardIgnoresIFrames;
         DamageManager.damageTypeList.add(this);
+    }
+
+    private int getSlotEPF(LivingEntity holder, EquipmentSlot slot) {
+        if(holder.getEquipment() != null) {
+            return holder.getEquipment().getItem(slot).getEnchantmentLevel(Enchantment.PROTECTION);
+        } else {
+            return 0;
+        }
+    }
+
+    private int getTotalEPF(LivingEntity le) {
+        return getSlotEPF(le, EquipmentSlot.FEET) + getSlotEPF(le, EquipmentSlot.BODY) + getSlotEPF(le, EquipmentSlot.HEAD) + getSlotEPF(le, EquipmentSlot.LEGS);
     }
 
     public void damage(LivingEntity victim, @Nullable LivingEntity attacker, double amount) {
@@ -90,19 +103,21 @@ public class DamageType {
         }
         if(consumer != null) consumer.accept(victim, attacker);
 
+        double epfMultiplier = getTotalEPF(victim);
+        double finalDamage = amount * (1 + (epfMultiplier * 0.04));
         if(victim instanceof Player pv) {
             if(blockable && pv.isBlocking()) {
                 EquipmentSlot shieldSlot = pv.getActiveItemHand();
                 pv.getWorld().playSound(pv, Sound.ITEM_SHIELD_BLOCK, 0.5f, 1);
-                pv.damageItemStack(shieldSlot, (int) ((int) amount/1.5));
+                pv.damageItemStack(shieldSlot, (int) ((int) finalDamage/1.25));
             } else {
                 if (attacker instanceof Player pa && TrustUtil.playerIsTrusted(pa, pv.getName()) && damagesTrustedPlayers) {
-                    pv.damage(Float.parseFloat(Configs.SHIVCORE_CONFIG.getString("trustedPlayersDamageReduction")) * amount);
+                    pv.damage(Float.parseFloat(Configs.SHIVCORE_CONFIG.getString("trustedPlayersDamageReduction")) * finalDamage);
                 }
-                pv.damage(amount);
+                pv.damage(finalDamage);
             }
         } else {
-            victim.damage(Float.parseFloat(Configs.SHIVCORE_CONFIG.getString("mobDamageMultiplier")) * amount);
+            victim.damage(Float.parseFloat(Configs.SHIVCORE_CONFIG.getString("mobDamageMultiplier")) * finalDamage);
         }
 
         if(ignitionTime > 0) victim.setFireTicks(ignitionTime);

@@ -29,7 +29,7 @@ public class DamageListener implements Listener {
                     e.deathMessage(Component.text(player.getName() + " " + damageType.getDeathMessage()));
                 }
             }
-            EntityUtil.setInt(player, 0, "customDamageType");
         }
+        EntityUtil.setInt(player, 0, "customDamageType");
     }
 }
