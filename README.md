@@ -20,8 +20,8 @@ In the design philosophy behind ShivCore, modularity is the top priority, in whi
 The Auratus Gem is a commission which acts as a canvas for content creators to build narratives off of, where multiple YouTubers have reached **hundreds of thousands** of views from
 videos based around the Auratus Gem. Additionally, as a result of these videos there are multiple fan projects online for public download which attempt to mimic the plugin.
 
-<img width="435" height="307" alt="image" src="https://github.com/user-attachments/assets/f864986b-5030-4426-82d7-bfcf9ca4c809" />
-<img width="436" height="303" alt="image" src="https://github.com/user-attachments/assets/f9f75ccc-a729-477e-b175-6486ded073df" /> <br>
+<img width="326" height="230" alt="image" src="https://github.com/user-attachments/assets/f864986b-5030-4426-82d7-bfcf9ca4c809" />
+<img width="326" height="230" alt="image" src="https://github.com/user-attachments/assets/f9f75ccc-a729-477e-b175-6486ded073df" /> <br>
 
 > YouTubers: DumbIsDumb & Pinity
 
