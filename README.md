@@ -14,13 +14,21 @@ In the design philosophy behind ShivCore, modularity is the top priority, in whi
 | ● Animated Particle Builder | ● True Damage System        |
 | ● GUI Builders              | ● Segment Based Rope System |
 | ● Entity Behavior Builders  | ● Custom Ticking Entity System| 
-___
+
 ## What is Made With ShivCore?
 ### Bliss SMP - Auratus Gem
 The Auratus Gem is a commission which acts as a canvas for content creators to build narratives off of, where multiple YouTubers have reached **hundreds of thousands** of views from
 videos based around the Auratus Gem. Additionally, as a result of these videos there are multiple fan projects online for public download which attempt to mimic the plugin.
 
+<img width="435" height="307" alt="image" src="https://github.com/user-attachments/assets/f864986b-5030-4426-82d7-bfcf9ca4c809" />
+<img width="436" height="303" alt="image" src="https://github.com/user-attachments/assets/f9f75ccc-a729-477e-b175-6486ded073df" /> <br>
+
+> YouTubers: DumbIsDumb & Pinity
+
+___
+
 ### Ocular SMP
-OcularSMP is an in-development project with the goal of adding the perfect ability based combat where the design philosophy prioritizes fun and fairness among all else.
+OcularSMP is an in-development project with the goal of adding the perfect ability based combat where the design philosophy prioritizes fun and fairness among all else. It is an SMP ability plugin where the player is provided 3 slots and *(eventually)* 20 abilities to pick and choose from.
 
 <img width="400" height="244" alt="2026-11-14_00-44-25" src="https://github.com/user-attachments/assets/c0086412-7395-49d3-a6de-0477c53bc8f0" />
+<img width="400" height="240" alt="2026-08-17_13-23-44" src="https://github.com/user-attachments/assets/65bcc72a-b43c-49b3-9348-5c2263fb3a82" />
